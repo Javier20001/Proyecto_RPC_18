@@ -32,6 +32,7 @@ public class LoginService extends LoginServiceGrpc.LoginServiceImplBase {
                     LoginResponse response = LoginResponse.newBuilder()
                             .setMessage("Login exitoso")
                             .setRole(user.getRol())
+                            .setId(user.getId())
                             .build();
                     responseObserver.onNext(response);
                     responseObserver.onCompleted();
