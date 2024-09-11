@@ -36,4 +36,12 @@ public class User {
     @Column(name = "rol", nullable = false)
     private String rol;
 
+    public User(String username, String password, String nombre, String apellido, Boolean habilitado, String rol) {
+        this.username = username;
+        this.password = password;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.habilitado = habilitado;
+        this.rol = rol;
+    }
 }
