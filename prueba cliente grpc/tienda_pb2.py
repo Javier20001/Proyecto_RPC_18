@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ctienda.proto\"n\n\x06Tienda\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0e\n\x06\x63odigo\x18\x02 \x01(\t\x12\x11\n\tprovincia\x18\x03 \x01(\t\x12\x0e\n\x06\x63iudad\x18\x04 \x01(\t\x12\x11\n\tdireccion\x18\x05 \x01(\t\x12\x12\n\nhabilitada\x18\x06 \x01(\x08\x32\x0f\n\rTiendaServiceB3\n\x1d\x63om.grpc.grpc_server.servicesB\x12TiendaServiceProtob\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ctienda.proto\"\r\n\x0bTiendaEmpty\"\"\n\x07Tiendas\x12\x17\n\x06tienda\x18\x01 \x03(\x0b\x32\x07.Tienda\"n\n\x06Tienda\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0e\n\x06\x63odigo\x18\x02 \x01(\t\x12\x11\n\tprovincia\x18\x03 \x01(\t\x12\x0e\n\x06\x63iudad\x18\x04 \x01(\t\x12\x11\n\tdireccion\x18\x05 \x01(\t\x12\x12\n\nhabilitada\x18\x06 \x01(\x08\x32\x8b\x02\n\rTiendaService\x12!\n\x07\x46indAll\x12\x0c.TiendaEmpty\x1a\x08.Tiendas\x12\x1c\n\x08\x46indById\x12\x07.Tienda\x1a\x07.Tienda\x12 \n\x0c\x46indByCodigo\x12\x07.Tienda\x1a\x07.Tienda\x12\x33\n\x19\x46indAllTiendasHabilitadas\x12\x0c.TiendaEmpty\x1a\x08.Tiendas\x12\x1d\n\tAddTienda\x12\x07.Tienda\x1a\x07.Tienda\x12 \n\x0cModifyTienda\x12\x07.Tienda\x1a\x07.Tienda\x12!\n\rDisableTienda\x12\x07.Tienda\x1a\x07.TiendaB3\n\x1d\x63om.grpc.grpc_server.servicesB\x12TiendaServiceProtob\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,8 +32,12 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'tienda_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n\035com.grpc.grpc_server.servicesB\022TiendaServiceProto'
-  _globals['_TIENDA']._serialized_start=16
-  _globals['_TIENDA']._serialized_end=126
-  _globals['_TIENDASERVICE']._serialized_start=128
-  _globals['_TIENDASERVICE']._serialized_end=143
+  _globals['_TIENDAEMPTY']._serialized_start=16
+  _globals['_TIENDAEMPTY']._serialized_end=29
+  _globals['_TIENDAS']._serialized_start=31
+  _globals['_TIENDAS']._serialized_end=65
+  _globals['_TIENDA']._serialized_start=67
+  _globals['_TIENDA']._serialized_end=177
+  _globals['_TIENDASERVICE']._serialized_start=180
+  _globals['_TIENDASERVICE']._serialized_end=447
 # @@protoc_insertion_point(module_scope)
