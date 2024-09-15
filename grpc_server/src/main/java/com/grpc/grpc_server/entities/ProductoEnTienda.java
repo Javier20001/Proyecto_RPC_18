@@ -14,8 +14,8 @@ public class ProductoEnTienda {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "tienda_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "tienda_id", nullable = true)
     private Tienda tienda;
 
     @ManyToOne(optional = false)
@@ -31,4 +31,11 @@ public class ProductoEnTienda {
     @Column(name = "color", nullable = false, length = 50)
     private String color;
 
+    public ProductoEnTienda(Tienda tienda, Producto producto, int stock, String talle, String color) {
+        this.tienda = tienda;
+        this.producto = producto;
+        this.stock = stock;
+        this.talle = talle;
+        this.color = color;
+    }
 }

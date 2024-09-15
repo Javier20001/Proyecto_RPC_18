@@ -29,4 +29,11 @@ public class Tienda {
     @Column(name = "habilitada", nullable = false)
     private Boolean habilitada;
 
+    public Tienda(String codigo, String provincia, String ciudad, String direccion, Boolean habilitada) {
+        this.codigo = codigo;
+        this.provincia = provincia;
+        this.ciudad = ciudad;
+        this.direccion = direccion;
+        this.habilitada = habilitada;
+    }
 }

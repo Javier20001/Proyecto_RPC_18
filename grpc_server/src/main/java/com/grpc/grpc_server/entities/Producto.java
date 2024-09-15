@@ -23,4 +23,9 @@ public class Producto {
     @Column(name = "foto", nullable = true)
     private String foto;
 
+    public Producto(String nombre, String codigo, String foto) {
+        this.nombre = nombre;
+        this.codigo = codigo;
+        this.foto = foto;
+    }
 }
