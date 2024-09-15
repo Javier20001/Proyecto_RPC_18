@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option java_package = "com.grpc.grpc_server.services";
+option java_outer_classname = "ProductoServiceProto";
+
+service ProductoService {
+  rpc FindAll(ProductoEmpty) returns (Productos);
+  rpc FindById(Producto) returns (Producto);
+  rpc FindByCodigo(Producto) returns (Producto);
+  rpc FindByNombre(Producto) returns (Producto);
+  rpc AddProducto(Producto) returns (Producto);
+  rpc ModifyProducto(Producto) returns(Producto);
+}
+
+message ProductoEmpty {}
+
+message Productos {
+  repeated Producto producto = 1;
+}
+
+message Producto {
+    int32 id = 1;
+    string nombre = 2;
+    string codigo = 3;
+    string foto = 4;
+}
