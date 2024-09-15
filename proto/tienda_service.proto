@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_package = "com.grpc.grpc_server.services";
+option java_outer_classname = "TiendaServiceProto";
+
+service TiendaService {
+  rpc FindAll(TiendaEmpty) returns (Tiendas);
+  rpc FindById(Tienda) returns (Tienda);
+  rpc FindByCodigo(Tienda) returns (Tienda);
+  rpc FindAllTiendasHabilitadas(TiendaEmpty) returns (Tiendas);
+  rpc AddTienda(Tienda) returns (Tienda);
+  rpc ModifyTienda(Tienda) returns (Tienda);
+  rpc DisableTienda(Tienda) returns (Tienda);
+}
+
+message TiendaEmpty {}
+
+message Tiendas {
+  repeated Tienda tienda = 1;
+}
+
+message Tienda {
+    int32 id = 1;
+    string codigo = 2;
+    string provincia = 3;
+    string ciudad = 4;
+    string direccion = 5;
+    bool habilitada = 6;
+}

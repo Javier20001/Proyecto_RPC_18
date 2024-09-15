@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option java_package = "com.grpc.grpc_server.services";
+option java_outer_classname = "UserServiceProto";
+
+import "tienda_service.proto";  // Importamos el archivo correcto donde está definido Tienda
+
+service UserService {
+  rpc FindAll(Empty) returns (Users);
+  rpc FindById(User) returns (User);
+  rpc AddUser(User) returns (User);
+  rpc ModifyUser(User) returns (User);
+  rpc FindByUsername(User) returns (User);
+  rpc FindAllByTienda(Tienda) returns (Users);
+  rpc DisableUser(User) returns (User);
+}
+
+message Empty {}
+
+message Users {
+  repeated User user = 1;
+}
+
+message User {
+  int32 id = 1;
+  string username = 2;
+  string password = 3;
+  Tienda tienda = 4;  // Tienda está definido en tienda_service.proto
+  string nombre = 5;
+  string apellido = 6;
+  bool habilitado = 7;
+  string rol = 8;
+}
