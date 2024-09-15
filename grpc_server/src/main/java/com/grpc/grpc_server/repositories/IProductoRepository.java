@@ -11,4 +11,6 @@ public interface IProductoRepository extends JpaRepository<Producto, Integer> {
 
     public abstract Optional<Producto> findByCodigo(String codigo);
 
+    public abstract Optional<Producto> findByNombre(String nombre);
+
 }

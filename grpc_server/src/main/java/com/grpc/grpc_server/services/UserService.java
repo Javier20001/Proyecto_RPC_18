@@ -90,8 +90,8 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase{
         responseObserver.onCompleted();
     }
 
-    //IMPORTANTE: enviar todos los datos del usuario, sino se pondran en null (se puede modificar esto de ultima)
-    //Recibe un usuario y segun el id le modifica los datos enviados de: password, nombre, apellido, habilitado, rol
+    //IMPORTANTE: enviar todos los datos del usuario, sino se pondran en null (se puede modificar esto de ultima), la contraseña no es necesario enviarla para que no se modifique
+    //Recibe un usuario y segun el id le modifica los datos enviados de: password, nombre, apellido, habilitado, rol y tienda
     @Override
     public void modifyUser(UserServiceProto.User request, StreamObserver<UserServiceProto.User> responseObserver) {
         Optional<User> optionalUserEntity = userRepository.findById(request.getId());
@@ -100,7 +100,9 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase{
             User userEntity = optionalUserEntity.get();
 
             // Modificar los atributos que se pueden cambiar
-            userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+            if (!request.getPassword().isEmpty()){
+                userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+            }
             userEntity.setNombre(request.getNombre());
             userEntity.setApellido(request.getApellido());
             userEntity.setHabilitado(request.getHabilitado());

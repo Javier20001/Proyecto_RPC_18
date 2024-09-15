@@ -4,7 +4,13 @@ option java_package = "com.grpc.grpc_server.services";
 option java_outer_classname = "TiendaServiceProto";
 
 service TiendaService {
-    rpc FindAll(TiendaEmpty) returns (Tiendas);
+  rpc FindAll(TiendaEmpty) returns (Tiendas);
+  rpc FindById(Tienda) returns (Tienda);
+  rpc FindByCodigo(Tienda) returns (Tienda);
+  rpc FindAllTiendasHabilitadas(TiendaEmpty) returns (Tiendas);
+  rpc AddTienda(Tienda) returns (Tienda);
+  rpc ModifyTienda(Tienda) returns(Tienda);
+  rpc DisableTienda(Tienda) returns(Tienda);
 }
 
 message TiendaEmpty {}
