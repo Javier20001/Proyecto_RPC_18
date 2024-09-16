@@ -110,6 +110,7 @@ public class TiendaService extends TiendaServiceGrpc.TiendaServiceImplBase{
                 responseObserver.onError(
                         Status.ALREADY_EXISTS.withDescription("Tienda with this provincia, ciudad and direccion already exists.").asRuntimeException()
                 );
+                return;
             }
 
             Tienda updatedTiendaEntity = tiendaRepository.save(tiendaEntity);
