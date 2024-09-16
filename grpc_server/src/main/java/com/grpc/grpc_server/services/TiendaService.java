@@ -101,17 +101,15 @@ public class TiendaService extends TiendaServiceGrpc.TiendaServiceImplBase{
             Tienda tiendaEntity = optionalTiendaEntity.get();
 
             // Modificar los atributos que se pueden cambiar
-            tiendaEntity.setCodigo(request.getCodigo());
             tiendaEntity.setProvincia(request.getProvincia());
             tiendaEntity.setCiudad(request.getCiudad());
             tiendaEntity.setDireccion(request.getDireccion());
             tiendaEntity.setHabilitada(request.getHabilitada());
 
-            if (tiendaRepository.findByCodigo(request.getCodigo()).isPresent()){
+            if (tiendaRepository.findByProvinciaAndCiudadAndDireccion(request.getProvincia(),request.getCiudad(),request.getDireccion()).isPresent()){
                 responseObserver.onError(
-                        Status.ALREADY_EXISTS.withDescription("Tienda with this codigo already exists.").asRuntimeException()
+                        Status.ALREADY_EXISTS.withDescription("Tienda with this provincia, ciudad and direccion already exists.").asRuntimeException()
                 );
-                return;
             }
 
             Tienda updatedTiendaEntity = tiendaRepository.save(tiendaEntity);
