@@ -14,4 +14,6 @@ public interface ITiendaRepository extends JpaRepository<Tienda, Integer> {
 
     public abstract List<Tienda> findAllByHabilitada(boolean habilitada);
 
+    public abstract Optional<Tienda> findByProvinciaAndCiudadAndDireccion(String provincia, String ciudad, String direccion);
+
 }
