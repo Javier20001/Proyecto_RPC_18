@@ -4,11 +4,9 @@ import user_service_pb2_grpc
 import tienda_service_pb2
 
 class UserClient:
-    def __init__(self, host='localhost', port=9090):
-        # Crear un canal para conectarse al servidor gRPC
-        self.channel = grpc.insecure_channel(f'{host}:{port}')
+    def __init__(self, channel):
         # Crear un stub para el servicio UserService
-        self.stub = user_service_pb2_grpc.UserServiceStub(self.channel)
+        self.stub = user_service_pb2_grpc.UserServiceStub(channel)
 
     def find_all(self):
         # Crear una solicitud vacía
@@ -83,6 +81,8 @@ class UserClient:
             # Llamar al método ModifyUser del servidor
             response = self.stub.ModifyUser(modified_user)
             print(f"Usuario modificado: ID: {response.id}, Username: {response.username}")
+
+            return response
         except grpc.RpcError as e:
             print(f"Error en ModifyUser: {e.details()}")
 
