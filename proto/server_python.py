@@ -4,21 +4,18 @@ from flask import Flask, jsonify, request
 from tienda_service_client_grpc import TiendaClient
 from user_service_client_grpc import UserClient 
 from producto_service_client_grpc import ProductoClient 
-from producto_manager_service_client_grpc import ProductoManagerClient
-import tienda_service_pb2
-import user_service_pb2
-
-
-
+from producto_manager_cliente_grpc import ProductoManagerClient
+import producto_manager_pb2
+import producto_manager_pb2_grpc
 
 
 app = Flask(__name__)
-
 
 channel = grpc.insecure_channel('localhost:9090')
 tiendaclient = TiendaClient(channel)
 user_client = UserClient(channel)
 productoclient = ProductoClient(channel)
+productomanagerclient = ProductoManagerClient(channel)
 
 
 @app.route('/tiendas', methods=['GET'])
@@ -120,7 +117,6 @@ def add_tienda():
         ciudad = data.get('ciudad')
         direccion = data.get('direccion')
         habilitada = data.get('habilitada')
-        
         
         # Llamar al método AddTienda del servicio gRPC
         response = tiendaclient.add_tienda(codigo, provincia, ciudad, direccion, habilitada)
@@ -330,46 +326,149 @@ def find_producto_by_codigo(codigo):
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-#Metodos para producto_manager
+# Método agregar producto
+@app.route('/producto/<int:producto_id>/tienda/<int:tienda_id>_manager', methods=['GET'])
+def find_by_id_manager(producto_id, tienda_id):
+    """Endpoint para buscar un producto por su ID en una tienda específica"""
+    response = productomanagerclient.find_by_id(producto_id, tienda_id)
+    if response:
+        return jsonify({
+            'id': response.id,
+            'stock': response.stock,
+            'talle': response.talle,
+            'color': response.color
+        }), 200
+    else:
+        return jsonify({'error': 'Producto no encontrado'}), 404
 
-#Metodo agregar producto
+@app.route('/productos_manager', methods=['GET'])
+def find_all_manager():
+    """Endpoint para obtener todos los productos en todas las tiendas"""
+    response = productomanagerclient.find_all()
+    productos = [{
+        'id': producto.id,
+        'stock': producto.stock,
+        'talle': producto.talle,
+        'color': producto.color
+    } for producto in response.productoEnTienda]
+    return jsonify(productos), 200
+
+@app.route('/productos/tienda/<int:tienda_id>_manager', methods=['GET'])
+def find_all_by_tienda_id_manager(tienda_id):
+    """Endpoint para obtener todos los productos en una tienda por el ID de la tienda"""
+    response = productomanagerclient.find_all_by_tienda_id(tienda_id)
+    productos = [{
+        'id': producto.id,
+        'producto': {
+            'nombre': producto.producto.nombre,  # Aquí mapeas los atributos del objeto Producto
+            'precio': producto.producto.codigo   # Agrega más atributos según tu mensaje Producto
+        },
+        'stock': producto.stock,
+        'talle': producto.talle,
+        'color': producto.color
+    } for producto in response.productoEnTienda]
+    return jsonify(productos), 200
+
+@app.route('/productos/producto/<int:producto_id>_manager', methods=['GET'])
+def find_all_by_producto_id_manager(producto_id):
+    """Endpoint para obtener todos los productos en tiendas por el ID del producto"""
+    response = productomanagerclient.find_all_by_producto_id(producto_id)
+    productos = [{
+        'id': producto.id,
+        'stock': producto.stock,
+        'talle': producto.talle,
+        'color': producto.color
+    } for producto in response.productoEnTienda]
+    return jsonify(productos), 200
+
+@app.route('/productos/filter_manager', methods=['POST'])
+def find_all_by_custom_filter_manager():
+    """Endpoint para obtener productos con un filtro personalizado"""
+    data = request.json
+    nombre = data.get('nombre')
+    codigo = data.get('codigo')
+    talle = data.get('talle')
+    color = data.get('color')
+    tienda_id = data.get('tienda_id')
+    
+    response = productomanagerclient.find_all_by_custom_filter(nombre, codigo, talle, color, tienda_id)
+    productos = [{
+        'id': producto.id,
+        'stock': producto.stock,
+        'talle': producto.talle,
+        'color': producto.color
+    } for producto in response.productoEnTienda]
+    return jsonify(productos), 200
+
+@app.route('/producto/asignar_manager', methods=['POST'])
+def assign_producto_to_tienda_manager():
+    """Endpoint para asignar un producto a una tienda"""
+    data = request.json
+    producto_id = data['producto_id']
+    nombre = data['nombre']
+    codigo = data['codigo']
+    foto = data.get('foto', '')
+    talle = data['talle']
+    color = data['color']
+    tienda_id = data['tienda_id']
+    
+    response = productomanagerclient.assign_producto_to_tienda(
+        producto_id, nombre, codigo, foto, talle, color, tienda_id
+    )
+    return jsonify({'message': response.message}), 200
 
 @app.route('/producto_manager', methods=['POST'])
 def add_producto_manager():
-    try:
-        # Obtener los datos del cuerpo de la solicitud
-        data = request.json
-        
-        nombre = data.get('nombre')
-        codigo = data.get('codigo')
-        foto = data.get('foto')
-        talle = data.get('talle')
-        color = data.get('color')
-        
-        # Validar que todos los datos necesarios estén presentes
-        if not all([nombre, codigo, foto, talle, color]):
-            return jsonify({'error': 'Nombre, código, foto, talle y color son requeridos'}), 400
-        
-        # Llamar al método AddProducto del cliente gRPC
-        response = productoclient.add_producto(nombre, codigo, foto, talle, color)
-        
-        if response:
-            # Acceder a los atributos del objeto response
-            return jsonify({
-                'id': response.id,
-                'nombre': response.nombre,
-                'codigo': response.codigo,
-                'foto': response.foto,
-                'talle': response.talle,
-                'color': response.color
-            }), 201
-        else:
-            return jsonify({'error': 'Unable to add producto'}), 500
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    """Endpoint para agregar un nuevo producto"""
+    data = request.json
+    nombre = data['nombre']
+    codigo = data['codigo']
+    foto = data.get('foto', '')
+    talle = data['talle']
+    color = data['color']
+    
+    response = productomanagerclient.add_producto(nombre, codigo, foto, talle, color)
+    return jsonify({
+        'id': response.id,
+        'stock': response.stock,
+        'talle': response.talle,
+        'color': response.color
+    }), 201
 
+@app.route('/producto_manager', methods=['PUT'])
+def modify_producto_manager():
+    """Endpoint para modificar un producto existente"""
+    data = request.json
+    producto_id = data['producto_id'] #este es el id DEL PRODUCTO_EN_TIENDA no el del producto
+    nombre = data['nombre']
+    codigo = data['codigo']
+    foto = data.get('foto', '')
+    talle = data['talle']
+    color = data['color']
+    
+    response = productomanagerclient.modify_producto(producto_id, nombre, codigo, foto, talle, color)
+    return jsonify({
+        'id': response.id,
+        'stock': response.stock,
+        'talle': response.talle,
+        'color': response.color
+    }), 200
 
-
+@app.route('/producto/stock_manager', methods=['PUT'])
+def modify_stock_manager():
+    """Endpoint para modificar el stock de un producto en una tienda"""
+    data = request.json
+    producto_id = data['producto_id']
+    tienda_id = data['tienda_id']
+    stock = data['stock']
+    talle = data['talle']
+    color = data['color']
+    
+    response = productomanagerclient.modify_stock(producto_id, tienda_id, stock, talle, color)
+    return jsonify({
+        'id': response.id,
+        'stock': response.stock
+    }), 200
 
 
 if __name__ == '__main__':
