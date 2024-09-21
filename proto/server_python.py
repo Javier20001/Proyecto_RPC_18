@@ -1,5 +1,6 @@
 import sys
 import grpc
+from flask_cors import CORS
 from flask import Flask, jsonify, request
 from tienda_service_client_grpc import TiendaClient
 from user_service_client_grpc import UserClient 
@@ -10,6 +11,7 @@ import producto_manager_pb2_grpc
 
 
 app = Flask(__name__)
+CORS(app)
 
 channel = grpc.insecure_channel('localhost:9090')
 tiendaclient = TiendaClient(channel)
@@ -347,6 +349,10 @@ def find_all_manager():
     response = productomanagerclient.find_all()
     productos = [{
         'id': producto.id,
+        'producto': {
+            'nombre': producto.producto.nombre,  # Aquí mapeas los atributos del objeto Producto
+            'precio': producto.producto.codigo   # Agrega más atributos según tu mensaje Producto
+        },
         'stock': producto.stock,
         'talle': producto.talle,
         'color': producto.color
