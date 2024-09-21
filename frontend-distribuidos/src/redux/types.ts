@@ -58,6 +58,7 @@ export interface TiendaDTO {
   direccion: string;
 }
 
+// este sirve para actualziar pero requiere el id a diferencia que para el agregar
 export interface ProductoEnTiendaDTO {
   producto_id?: number;
   nombre: string;

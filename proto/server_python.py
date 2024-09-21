@@ -351,7 +351,11 @@ def find_all_manager():
         'id': producto.id,
         'producto': {
             'nombre': producto.producto.nombre,  # Aquí mapeas los atributos del objeto Producto
-            'precio': producto.producto.codigo   # Agrega más atributos según tu mensaje Producto
+            'codigo': producto.producto.codigo,
+            'foto': producto.producto.foto  # Agrega más atributos según tu mensaje Producto
+        },
+        'tienda':{
+            'codigo': producto.tienda.id
         },
         'stock': producto.stock,
         'talle': producto.talle,
@@ -364,10 +368,10 @@ def find_all_by_tienda_id_manager(tienda_id):
     """Endpoint para obtener todos los productos en una tienda por el ID de la tienda"""
     response = productomanagerclient.find_all_by_tienda_id(tienda_id)
     productos = [{
-        'id': producto.id,
+        'id_productoEnTienda': producto.id,
         'producto': {
             'nombre': producto.producto.nombre,  # Aquí mapeas los atributos del objeto Producto
-            'precio': producto.producto.codigo   # Agrega más atributos según tu mensaje Producto
+            'codigo': producto.producto.codigo   # Agrega más atributos según tu mensaje Producto
         },
         'stock': producto.stock,
         'talle': producto.talle,
@@ -380,7 +384,7 @@ def find_all_by_producto_id_manager(producto_id):
     """Endpoint para obtener todos los productos en tiendas por el ID del producto"""
     response = productomanagerclient.find_all_by_producto_id(producto_id)
     productos = [{
-        'id': producto.id,
+        'id_productoEnTienda': producto.id,
         'stock': producto.stock,
         'talle': producto.talle,
         'color': producto.color
@@ -399,7 +403,7 @@ def find_all_by_custom_filter_manager():
     
     response = productomanagerclient.find_all_by_custom_filter(nombre, codigo, talle, color, tienda_id)
     productos = [{
-        'id': producto.id,
+        'id_productoEnTienda': producto.id,
         'stock': producto.stock,
         'talle': producto.talle,
         'color': producto.color
@@ -435,7 +439,11 @@ def add_producto_manager():
     
     response = productomanagerclient.add_producto(nombre, codigo, foto, talle, color)
     return jsonify({
-        'id': response.id,
+        'id_productoEnTienda': response.id,
+        'producto': {
+            'nombre': response.producto.nombre,  # Aquí mapeas los atributos del objeto Producto
+            'codigo': response.producto.codigo   # Agrega más atributos según tu mensaje Producto
+        },
         'stock': response.stock,
         'talle': response.talle,
         'color': response.color
@@ -454,7 +462,11 @@ def modify_producto_manager():
     
     response = productomanagerclient.modify_producto(producto_id, nombre, codigo, foto, talle, color)
     return jsonify({
-        'id': response.id,
+        'id_productoEnTienda': response.id,
+        'producto': {
+            'nombre': response.producto.nombre,  # Aquí mapeas los atributos del objeto Producto
+            'codigo': response.producto.codigo   # Agrega más atributos según tu mensaje Producto
+        },
         'stock': response.stock,
         'talle': response.talle,
         'color': response.color
@@ -472,7 +484,7 @@ def modify_stock_manager():
     
     response = productomanagerclient.modify_stock(producto_id, tienda_id, stock, talle, color)
     return jsonify({
-        'id': response.id,
+        'id_productoEnTienda': response.id,
         'stock': response.stock
     }), 200
 

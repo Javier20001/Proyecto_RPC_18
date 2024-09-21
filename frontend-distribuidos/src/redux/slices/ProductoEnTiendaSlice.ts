@@ -29,7 +29,6 @@ export const fetchProductosEnTienda = createAsyncThunk(
     const response = await axios.get<ProductoEnTienda[]>(
       "http://127.0.0.1:8081/productos_manager"
     );
-    console.log(response.data);
     return response.data;
   }
 );

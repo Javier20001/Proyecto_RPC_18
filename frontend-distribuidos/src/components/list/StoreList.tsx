@@ -8,13 +8,14 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useStoreContext } from "../../hooks/StoreContext";
 import BasicModal from "../modal/Modal";
+import ModalProductosDeTienda from "../modal/ModalProductosDeTienda";
 
 const StoreList: React.FC = () => {
   const { stores } = useStoreContext();
 
   return (
     <div>
-      <BasicModal titulo="Agregar" />
+      <BasicModal proveniencia="tienda" titulo="Agregar" />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -24,6 +25,7 @@ const StoreList: React.FC = () => {
               <TableCell>provincia</TableCell>
               <TableCell>ciudad</TableCell>
               <TableCell>Direccion</TableCell>
+              <TableCell></TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
@@ -39,7 +41,14 @@ const StoreList: React.FC = () => {
                 <TableCell scope="row">{store.ciudad}</TableCell>
                 <TableCell scope="row">{store.direccion}</TableCell>
                 <TableCell>
-                  <BasicModal titulo="Actualizar" tienda={store} />
+                  <ModalProductosDeTienda tienda={store} />
+                </TableCell>
+                <TableCell>
+                  <BasicModal
+                    titulo="Actualizar"
+                    proveniencia="tienda"
+                    tienda={store}
+                  />
                 </TableCell>
               </TableRow>
             ))}
