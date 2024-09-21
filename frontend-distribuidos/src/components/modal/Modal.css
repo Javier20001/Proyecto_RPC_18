@@ -3,8 +3,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 30%;
-  max-width: 90%;
+  width: auto;
   background-color: rgb(91, 109, 211);
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -12,10 +11,4 @@
   color: #fff;
   overflow-y: auto;
   max-height: 85%;
-}
-
-@media (max-width: 600px) {
-  .modal-content {
-    width: 90%; /* Ajustar el ancho en pantallas pequeñas */
-  }
 }

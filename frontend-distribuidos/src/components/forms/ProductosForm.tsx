@@ -15,6 +15,7 @@ const FormProductoEnTienda: React.FC<FormProductoEnTiendaProps> = ({
   const { add_Producto, update_Producto } = useProductoEnTiendaContext();
 
   const [formData, setFormData] = useState<ProductoEnTiendaDTO>({
+    producto_id: productoEnTienda?.id,
     nombre: productoEnTienda?.producto.nombre || "",
     codigo: productoEnTienda?.producto.codigo || "",
     foto: productoEnTienda?.producto.foto || "",

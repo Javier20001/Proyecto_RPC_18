@@ -37,7 +37,10 @@ const BasicModal: React.FC<modalProps> = ({
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {titulo}
           </Typography>
-          <FormStore handleClose={handleClose} tienda={tienda} />
+          {proveniencia === "tienda" && (
+            <FormStore handleClose={handleClose} tienda={tienda} />
+          )}
+
           {proveniencia === "producto" && (
             <FormProductoEnTienda
               productoEnTienda={producto}
