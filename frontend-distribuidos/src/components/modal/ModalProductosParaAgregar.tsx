@@ -32,7 +32,7 @@ const ModalProductosParaAgregar: React.FC<modalProps> = ({ tienda_id }) => {
   // Manejar la asignación de productos
   const handleAssign = (product: ProductoEnTienda) => {
     const data: AsignarProductoEnTiendaDTO = {
-      producto_id: product.id_productoEnTienda,
+      producto_id: product.id,
       codigo: product.producto.codigo,
       foto: product.producto.foto,
       nombre: product.producto.nombre,
