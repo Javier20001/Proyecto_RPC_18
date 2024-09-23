@@ -37,7 +37,7 @@ const ProductLis: React.FC = () => {
                 key={product.id_productoEnTienda}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell scope="row">{product.id_productoEnTienda}</TableCell>
+                <TableCell scope="row">{product.id}</TableCell>
                 <TableCell scope="row">{product.producto.codigo}</TableCell>
                 <TableCell scope="row">{product.producto.nombre}</TableCell>
                 <TableCell>{product.talle}</TableCell>
