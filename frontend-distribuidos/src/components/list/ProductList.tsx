@@ -34,7 +34,7 @@ const ProductLis: React.FC = () => {
           <TableBody>
             {productosEnTienda.map((product) => (
               <TableRow
-                key={product.id_productoEnTienda}
+                key={product.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell scope="row">{product.id}</TableCell>
@@ -42,7 +42,7 @@ const ProductLis: React.FC = () => {
                 <TableCell scope="row">{product.producto.nombre}</TableCell>
                 <TableCell>{product.talle}</TableCell>
                 <TableCell scope="row">{product.color}</TableCell>
-                <TableCell scope="row">{product.tienda?.codigo}</TableCell>
+                <TableCell scope="row">{product.tienda?.id}</TableCell>
                 <TableCell>
                   <BasicModal
                     titulo="Actualizar"

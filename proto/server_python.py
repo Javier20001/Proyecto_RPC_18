@@ -355,7 +355,7 @@ def find_all_manager():
             'foto': producto.producto.foto  # Agrega más atributos según tu mensaje Producto
         },
         'tienda':{
-            'codigo': producto.tienda.id
+            'id': producto.tienda.id
         },
         'stock': producto.stock,
         'talle': producto.talle,

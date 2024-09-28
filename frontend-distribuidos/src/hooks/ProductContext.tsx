@@ -30,6 +30,7 @@ type ProductoEnTiendaContextType = {
   update_Producto: (productoEnTiendaDTO: ProductoEnTiendaDTO) => void;
   update_Stock: (updateData: updatProductStock) => void;
   filter_Productos: (filterData: filterProductoTiendaDTO) => void;
+  filter_Productos_By_Tienda: (tiendaId: number) => ProductoEnTienda[];
 };
 
 // Crear el contexto
@@ -92,6 +93,12 @@ export const ProductoEnTiendaProvider: React.FC<
     dispatch(filterProductosEnTienda({ filterData }));
   };
 
+  const filter_Productos_By_Tienda = (tiendaId: number) => {
+    return productosEnTienda.filter(
+      (product) => product.tienda?.id === tiendaId
+    );
+  };
+
   return (
     <ProductoEnTiendaContext.Provider
       value={{
@@ -104,6 +111,7 @@ export const ProductoEnTiendaProvider: React.FC<
         update_Producto,
         update_Stock,
         filter_Productos,
+        filter_Productos_By_Tienda,
       }}
     >
       {children}

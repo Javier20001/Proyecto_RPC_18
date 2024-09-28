@@ -53,7 +53,6 @@ const FormStore: React.FC<FormStoreProps> = ({ handleClose, tienda }) => {
       };
 
       if (tienda) {
-        console.log(tienda.id);
         update_Store(storedto, tienda.id);
       } else {
         add_Store(storedto);
