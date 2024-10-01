@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "orden_de_compra")
@@ -22,6 +23,9 @@ public class OrdenDeCompra {
 
     @Column(name = "observaciones", length = 200)
     private String observaciones;
+
+    @OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductoEnOC> productosEnOC;
 
     @OneToOne
     @JoinColumn(name = "orden_de_despacho_id", nullable = true)

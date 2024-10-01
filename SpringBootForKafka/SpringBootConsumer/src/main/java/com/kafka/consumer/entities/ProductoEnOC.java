@@ -23,6 +23,10 @@ public class ProductoEnOC {
     @Column(name = "talle", nullable = false, length = 50)
     private String talle;
 
+    @ManyToOne
+    @JoinColumn(name = "orden_de_compra_id", nullable = false)
+    private OrdenDeCompra ordenDeCompra;
+
     @Column(name = "cantidad_solicitada", nullable = false)
     private int cantidadSolicitada;
 
