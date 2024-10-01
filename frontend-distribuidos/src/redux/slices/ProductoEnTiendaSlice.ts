@@ -236,8 +236,7 @@ const productoEnTiendaSlice = createSlice({
         (state, action: PayloadAction<ProductoEnTienda>) => {
           state.status = "succeeded";
           const index = state.productosEnTienda.findIndex(
-            (item) =>
-              item.id_productoEnTienda === action.payload.id_productoEnTienda
+            (item) => item.id === action.payload.id
           );
           if (index !== -1) {
             state.productosEnTienda[index] = action.payload;
@@ -292,8 +291,7 @@ const productoEnTiendaSlice = createSlice({
         (state, action: PayloadAction<ProductoEnTienda>) => {
           state.status = "succeeded";
           const index = state.productosEnTienda.findIndex(
-            (item) =>
-              item.id_productoEnTienda === action.payload.id_productoEnTienda
+            (item) => item.id === action.payload.id
           );
           if (index !== -1) {
             state.productosEnTienda[index] = action.payload;
@@ -314,7 +312,7 @@ const productoEnTiendaSlice = createSlice({
         (state, action: PayloadAction<{ id: number; stock: number }>) => {
           state.status = "succeeded";
           const index = state.productosEnTienda.findIndex(
-            (item) => item.id_productoEnTienda === action.payload.id
+            (item) => item.id === action.payload.id
           );
           if (index !== -1) {
             state.productosEnTienda[index].stock = action.payload.stock;

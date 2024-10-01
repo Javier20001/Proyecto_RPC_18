@@ -11,7 +11,6 @@ import org.springframework.kafka.core.ProducerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Configuration
 public class KafkaProviderConfig {
@@ -24,16 +23,21 @@ public class KafkaProviderConfig {
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+
+        // Opcionales: Mejora de confiabilidad
+        properties.put(ProducerConfig.ACKS_CONFIG, "all"); // Confirma cuando todas las réplicas reciben el mensaje
+        properties.put(ProducerConfig.RETRIES_CONFIG, 3);  // Número de intentos de reenvío
+
         return  properties;
     }
 
     @Bean
-    public ProducerFactory<String,String> providerFactory(){
+    public ProducerFactory<String, String> providerFactory(){
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
 
     @Bean
-    public KafkaTemplate<String , String> kafkaTemplate( ProducerFactory<String, String> producerFactory){
+    public KafkaTemplate<String, String> kafkaTemplate(ProducerFactory<String, String> producerFactory){
         return new KafkaTemplate<>(producerFactory);
     }
 }

@@ -1,8 +1,7 @@
 package com.kafka.consumer.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringSerializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,21 +20,23 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.bootstrapServers}")
     private String bootstrapServer;
 
-
+    // Configuraciones para el consumidor
     public Map<String, Object> consumerConfig(){
         Map<String, Object> properties = new HashMap<>();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
-        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class); // Cambiado a deserializer
+        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class); // Cambiado a deserializer
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "my-group-id"); // Grupo del consumidor
         return  properties;
     }
 
-
+    // Fábrica de consumidores
     @Bean
     public ConsumerFactory<String, String> consumerFactory(){
-        return new DefaultKafkaConsumerFactory<String,String>(consumerConfig());
+        return new DefaultKafkaConsumerFactory<>(consumerConfig());
     }
 
+    // Contenedor para listeners de Kafka
     @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> consumer(){
         ConcurrentKafkaListenerContainerFactory<String,String> factory = new ConcurrentKafkaListenerContainerFactory<>();

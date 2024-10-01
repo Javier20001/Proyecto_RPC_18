@@ -30,6 +30,7 @@
 	<modules>
 		<module>SpringBooProvider</module>
 		<module>SpringBootConsumer</module>
+		<module>grpc_server</module>
 	</modules>
 
 	<properties>
