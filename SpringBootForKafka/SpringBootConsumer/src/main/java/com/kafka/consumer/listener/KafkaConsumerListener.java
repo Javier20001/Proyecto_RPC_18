@@ -30,4 +30,10 @@ public class KafkaConsumerListener {
         LOGGER.info("Mensaje de respuesta enviado: " + responseMessage);
     }
 
+    // Metodo para enviar mensajes desde el servicio
+    public void sendMessage(String topic, String message) {
+        kafkaTemplate.send(topic, message);
+        LOGGER.info("Mensaje enviado al topic '{}': {}", topic, message);
+    }
+
 }

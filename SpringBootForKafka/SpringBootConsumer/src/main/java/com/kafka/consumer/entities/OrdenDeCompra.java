@@ -27,6 +27,10 @@ public class OrdenDeCompra {
     @OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductoEnOC> productosEnOC;
 
+    @ManyToOne
+    @JoinColumn(name = "tienda_id", nullable = false)
+    private Tienda tienda;
+
     @OneToOne
     @JoinColumn(name = "orden_de_despacho_id", nullable = true)
     private OrdenDeDespacho ordenDeDespacho;
