@@ -1,5 +1,6 @@
 package com.kafka.consumer.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class ProductoEnOC {
     private String talle;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "orden_de_compra_id", nullable = false)
     private OrdenDeCompra ordenDeCompra;
 

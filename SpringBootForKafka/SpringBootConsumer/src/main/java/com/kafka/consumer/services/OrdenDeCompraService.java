@@ -1,5 +1,7 @@
 package com.kafka.consumer.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kafka.consumer.entities.OrdenDeCompra;
 import com.kafka.consumer.entities.ProductoEnOC;
 import com.kafka.consumer.listener.KafkaConsumerListener;
@@ -12,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service("OrdenDeCompraService")
@@ -53,12 +57,22 @@ public class OrdenDeCompraService {
 
         ordenDeCompraRepository.save(ordenDeCompra);
 
-        String mensaje = String.format("Tienda: %s, ID: %d, Items: %s, Fecha: %s",
-                ordenDeCompra.getTienda().getCodigo(),
-                ordenDeCompra.getId(),
-                productos.toString(),
-                ordenDeCompra.getFechaDeSolicitud().toString());
-        kafkaConsumerListener.sendMessage("orden-de-compra", mensaje);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            Map<String, Object> mensajeMap = new HashMap<>();
+
+            mensajeMap.put("tiendaCodigo", ordenDeCompra.getTienda().getCodigo());
+            mensajeMap.put("ordenId", ordenDeCompra.getId());
+            mensajeMap.put("items", productos);
+            mensajeMap.put("fechaSolicitud", ordenDeCompra.getFechaDeSolicitud().toString());
+
+            String mensajeJson = objectMapper.writeValueAsString(mensajeMap);
+            kafkaConsumerListener.sendMessage("orden-de-compra", mensajeJson);
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
         return ResponseEntity.ok("Orden de compra creada exitosamente");
     }
