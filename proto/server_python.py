@@ -7,8 +7,6 @@ from user_service_client_grpc import UserClient
 from producto_service_client_grpc import ProductoClient 
 from producto_manager_cliente_grpc import ProductoManagerClient
 from login_service_client_grpc import LoginClient
-import producto_manager_pb2
-import producto_manager_pb2_grpc
 
 
 app = Flask(__name__)
@@ -707,7 +705,7 @@ def login():
             return jsonify({'error': 'Username and password are required'}), 400
 
         # Llamar al método login del cliente gRPC
-        response = LoginClient.login(username, password)
+        response = login_client.login(username, password)
 
         if response:
             return jsonify({
