@@ -24,7 +24,7 @@ public class OrdenDeCompra {
     @Column(name = "observaciones", length = 200)
     private String observaciones;
 
-    @OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ordenDeCompra", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductoEnOC> productosEnOC;
 
     @ManyToOne
