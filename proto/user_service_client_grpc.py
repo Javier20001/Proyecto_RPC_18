@@ -16,6 +16,7 @@ class UserClient:
             response = self.stub.FindAll(empty_request)
             for user in response.user:
                 print(f"ID: {user.id}, Username: {user.username}, Nombre: {user.nombre}, Rol: {user.rol}")
+            return response
         except grpc.RpcError as e:
             print(f"Error en FindAll: {e.details()}")
 
@@ -25,6 +26,7 @@ class UserClient:
         try:
             response = self.stub.FindById(user_request)
             print(f"ID: {response.id}, Username: {response.username}, Nombre: {response.nombre}, Rol: {response.rol}")
+            return response 
         except grpc.RpcError as e:
             print(f"Error en FindById: {e.details()}")
 
@@ -59,25 +61,27 @@ class UserClient:
             # Llamar al método DisableUser del servidor
             response = self.stub.DisableUser(user_request)
             print(f"Usuario deshabilitado: ID: {response.id}, Habilitado: {response.habilitado}")
+            return response
         except grpc.RpcError as e:
             print(f"Error en DisableUser: {e.details()}")
 
     # Nuevo método para modificar un usuario
     def modify_user(self, user_id, username, password, tienda_id, nombre, apellido, habilitado, rol):
-        # Crear una tienda asociada (parte del user_service_pb2)
-        tienda = tienda_service_pb2.Tienda(id=tienda_id)
-        # Crear la solicitud de usuario a modificar
-        modified_user = user_service_pb2.User(
-            id=user_id,
-            username=username,
-            password=password,
-            tienda=tienda,
-            nombre=nombre,
-            apellido=apellido,
-            habilitado=habilitado,
-            rol=rol
-        )
         try:
+        # Crear una tienda asociada (parte del user_service_pb2)
+            tienda = tienda_service_pb2.Tienda(id=tienda_id)
+            # Crear la solicitud de usuario a modificar
+            modified_user = user_service_pb2.User(
+                id=int(user_id),
+                username=username,
+                password=password,
+                tienda=tienda,
+                nombre=nombre,
+                apellido=apellido,
+                habilitado=habilitado,
+                rol=rol
+            )
+       
             # Llamar al método ModifyUser del servidor
             response = self.stub.ModifyUser(modified_user)
             print(f"Usuario modificado: ID: {response.id}, Username: {response.username}")
@@ -94,6 +98,7 @@ class UserClient:
             # Llamar al método FindByUsername del servidor
             response = self.stub.FindByUsername(user_request)
             print(f"ID: {response.id}, Username: {response.username}, Nombre: {response.nombre}, Rol: {response.rol}")
+            return response
         except grpc.RpcError as e:
             print(f"Error en FindByUsername: {e.details()}")
 
@@ -106,6 +111,8 @@ class UserClient:
             response = self.stub.FindAllByTienda(tienda_request)
             for user in response.user:
                 print(f"ID: {user.id}, Username: {user.username}, Nombre: {user.nombre}, Rol: {user.rol}")
+
+                return response
         except grpc.RpcError as e:
             print(f"Error en FindAllByTienda: {e.details()}")
 
