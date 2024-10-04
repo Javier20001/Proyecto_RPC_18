@@ -1,5 +1,6 @@
 package com.kafka.provider.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class OrdenDeDespacho {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "ordenDeDespacho", cascade = CascadeType.ALL)
     private OrdenDeCompra ordenDeCompra;
 
