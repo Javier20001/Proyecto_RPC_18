@@ -18,6 +18,8 @@ public interface IProductoEnTiendaRepository extends JpaRepository<ProductoEnTie
 
     Optional<ProductoEnTienda> findByProductoAndTalleAndColorAndTiendaIsNull(Producto producto, String talle, String color);
 
+    Optional<ProductoEnTienda> findByProducto_CodigoAndTalleAndColorAndTiendaIsNull(String productoCodigo, String talle, String color);
+
     Optional<ProductoEnTienda> findByProducto_CodigoAndTalleAndColorAndTienda_Id(String productoCodigo, String talle, String color, int tiendaId);
 
     List<ProductoEnTienda> findByProductoAndTalleAndColorAndTienda(Producto producto, String talle, String color, Tienda tienda);
