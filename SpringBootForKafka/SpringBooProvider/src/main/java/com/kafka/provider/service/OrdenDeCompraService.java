@@ -66,7 +66,7 @@ public class OrdenDeCompraService {
         }
     }
 
-    private void atenderOrdenDeCompra(int ordenDeCompraId) throws JsonProcessingException {
+    public void atenderOrdenDeCompra(int ordenDeCompraId) throws JsonProcessingException {
         Optional<OrdenDeCompra> ordenDeCompraOptional = ordenDeCompraRepository.findById(ordenDeCompraId);
         if (ordenDeCompraOptional.isEmpty()){
             throw new NoSuchElementException("No se encontró la Orden de Compra con ID: " + ordenDeCompraId);
@@ -111,11 +111,12 @@ public class OrdenDeCompraService {
         }
 
         // Si esta correcto
+        ordenDeCompra.setPausada(false); // esto cuando entre por aqui por el metodo de actualizar stock, si llega aca no tendria que estar pausada mas.
         ordenDeCompra.setEstado("ACEPTADA");// esto se hace desde el que consume "/{codigo de tienda}/solicitudes" o aca?
         ordenDeCompraRepository.save(ordenDeCompra);
         enviarRespuesta(ordenDeCompra.getTienda().getCodigo(), ordenDeCompraId, "ACEPTADA", "Orden aceptada");
         int ordenDespachoId = generarOrdenDespacho(ordenDeCompraId);
-        enviarOrdenDespacho(ordenDespachoId);
+        enviarOrdenDespacho(ordenDespachoId, ordenDeCompra.getId());
         restarStockProveedor(ordenDeCompra.getProductosEnOC());
     }
 
@@ -150,18 +151,19 @@ public class OrdenDeCompraService {
         return ordenDeDespacho.getId();
     }
 
-    private void enviarOrdenDespacho(int ordenDespachoId) throws JsonProcessingException {
+    private void enviarOrdenDespacho(int ordenDespachoId, int ordenDeCompraId) throws JsonProcessingException {
         Optional<OrdenDeDespacho> ordenDeDespachoOptional = ordenDeDespachoRepository.findById(ordenDespachoId);
-        if(ordenDeDespachoOptional.isPresent()){
+        Optional<OrdenDeCompra> ordenDeCompraOptional = ordenDeCompraRepository.findById(ordenDeCompraId);
+        if(ordenDeDespachoOptional.isPresent() && ordenDeCompraOptional.isPresent()){
             OrdenDeDespacho ordenDeDespacho = ordenDeDespachoOptional.get();
             Map<String, Object> mensaje = new HashMap<>();
             mensaje.put("idOrdenDespacho", ordenDespachoId);
-            mensaje.put("idOrdenCompra", ordenDeDespacho.getOrdenDeCompra().getId());
+            mensaje.put("idOrdenCompra", ordenDeCompraId);
             mensaje.put("fechaEstimadoEnvio", ordenDeDespacho.getFechaEstimadaDeEnvio().toString());
 
             String jsonMensaje = new ObjectMapper().writeValueAsString(mensaje);
 
-            kafkaTemplate.send(ordenDeDespacho.getOrdenDeCompra().getTienda().getCodigo() + "-despacho", jsonMensaje);
+            kafkaTemplate.send(ordenDeCompraOptional.get().getTienda().getCodigo() + "-despacho", jsonMensaje);
         }
     }
 

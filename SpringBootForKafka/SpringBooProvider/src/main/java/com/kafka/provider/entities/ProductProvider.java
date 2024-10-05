@@ -26,13 +26,18 @@ public class ProductProvider {
     @Column(name = "stock", nullable = false)
     private int stock;
 
+    @Column(name = "foto", nullable = true)
+    private String foto;
+
     @Override
     public String toString() {
-        return "ProductoProvider{" +
+        return "ProductProvider{" +
                 "id=" + id +
                 ", codigo='" + codigo + '\'' +
                 ", color='" + color + '\'' +
                 ", talle='" + talle + '\'' +
+                ", stock=" + stock +
+                ", foto='" + foto + '\'' +
                 '}';
     }
 }
