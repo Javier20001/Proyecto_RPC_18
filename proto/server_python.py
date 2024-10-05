@@ -1,11 +1,11 @@
 import sys
 import grpc
 from flask import Flask, jsonify, request
-from tienda_service_client_grpc import TiendaClient
-from user_service_client_grpc import UserClient 
-from producto_service_client_grpc import ProductoClient 
-from producto_manager_cliente_grpc import ProductoManagerClient
-from login_service_client_grpc import LoginClient
+from Tienda_Service.tienda_service_client_grpc import TiendaClient
+from User_Service.user_service_client_grpc import UserClient 
+from Producto_Service.producto_service_client_grpc import ProductoClient 
+from Producto_Manager_Service.producto_manager_cliente_grpc import ProductoManagerClient
+from Login_Service.login_service_client_grpc import LoginClient
 import producto_manager_pb2
 import producto_manager_pb2_grpc
 
