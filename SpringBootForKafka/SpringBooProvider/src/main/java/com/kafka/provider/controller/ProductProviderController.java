@@ -17,7 +17,7 @@ public class ProductProviderController {
     private ProductProviderService productProviderService;
 
     @PostMapping
-    public ResponseEntity<String> addProductProvider(@RequestBody ProductProviderDTO productProviderDTO){
+    public ResponseEntity<String> addProducto(@RequestBody ProductProviderDTO productProviderDTO) throws JsonProcessingException {
         return  productProviderService.addProductProvider(productProviderDTO);
     }
 

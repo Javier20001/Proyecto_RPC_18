@@ -2,6 +2,7 @@ package com.kafka.provider.service;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kafka.provider.dtos.ProductProviderDTO;
 import com.kafka.provider.entities.OrdenDeCompra;
 import com.kafka.provider.entities.ProductProvider;
@@ -10,14 +11,20 @@ import com.kafka.provider.repository.ProductProviderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("productProviderService")
 public class ProductProviderService {
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
     private ProductProviderRepository productProviderRepository;
@@ -28,12 +35,30 @@ public class ProductProviderService {
     @Autowired
     private OrdenDeCompraService ordenDeCompraService;
 
-    public ResponseEntity<String> addProductProvider(ProductProviderDTO ppd){
-        if(productProviderRepository.findByCodigoAndColorAndTalleAndStock(ppd.getCodigo(),ppd.getColor(),ppd.getTalle(),ppd.getStock()).isPresent()){
+    public ResponseEntity<String> addProductProvider(ProductProviderDTO productProviderDTO) throws JsonProcessingException {
+        if (productProviderDTO.getCodigo() == null ||
+                productProviderDTO.getTalle() == null ||
+                productProviderDTO.getColor() == null) {
+            return ResponseEntity.badRequest().body("Uno o mas atributos son nulos.");
+        }
+
+        if (productProviderRepository.findByCodigoAndColorAndTalle(productProviderDTO.getCodigo(), productProviderDTO.getColor(), productProviderDTO.getTalle()).isPresent()){
             return ResponseEntity.status(HttpStatus.FOUND).body("Error: ya se encontro un producto con estas caracteristicas");
         }
-        productProviderRepository.save(ppd.toProductProvider());
-        return ResponseEntity.ok("Orden de compra creada exitosamente");
+
+        productProviderRepository.save(productProviderDTO.toProductProvider());
+
+        Map<String, Object> mensaje = new HashMap<>();
+        mensaje.put("codigoDelProducto", productProviderDTO.getCodigo());
+        mensaje.put("talle", productProviderDTO.getTalle());
+        mensaje.put("color", productProviderDTO.getColor());
+        mensaje.put("fotoURL", productProviderDTO.getFoto());
+
+        String jsonMensaje = new ObjectMapper().writeValueAsString(mensaje);
+
+        kafkaTemplate.send("novedades", jsonMensaje);
+
+        return ResponseEntity.ok("Producto creado exitosamente");
     }
 
     public List<ProductProviderDTO> obtenerTodosLosProductos() {

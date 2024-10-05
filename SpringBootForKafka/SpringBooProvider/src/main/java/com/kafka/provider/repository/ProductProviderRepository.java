@@ -14,4 +14,6 @@ public interface ProductProviderRepository extends JpaRepository<ProductProvider
     Optional<ProductProvider> findByCodigoAndColorAndTalleAndStock(String codigo, String color, String talle, int stock);
 
     public abstract Optional<ProductProvider> findByCodigo(String codigo);
+
+    Optional<ProductProvider> findByCodigoAndColorAndTalle(String codigo, String color, String talle);
 }
