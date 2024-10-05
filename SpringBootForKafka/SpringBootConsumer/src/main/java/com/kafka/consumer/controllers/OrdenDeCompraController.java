@@ -19,7 +19,7 @@ public class OrdenDeCompraController {
     // Pide los datos de observaciones, idTienda y una lista de productos(color, talle, cantidadSolicitada)
     @PostMapping("")
     public ResponseEntity<String> post(@RequestBody OrdenDeCompraModel model) {
-        return ordenDeCompraService.saveOrUpdate(model);
+        return ordenDeCompraService.createOrdenDeCompra(model);
     }
 
 }

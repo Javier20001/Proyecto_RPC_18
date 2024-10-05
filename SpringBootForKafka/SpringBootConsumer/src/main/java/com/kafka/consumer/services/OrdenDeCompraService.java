@@ -14,7 +14,6 @@ import com.kafka.consumer.repositories.ITiendaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -39,7 +38,7 @@ public class OrdenDeCompraService {
     @Autowired
     private KafkaConsumerListener kafkaConsumerListener;
 
-    public ResponseEntity<String> saveOrUpdate(OrdenDeCompraModel model) {
+    public ResponseEntity<String> createOrdenDeCompra(OrdenDeCompraModel model) {
 
         OrdenDeCompra ordenDeCompra = new OrdenDeCompra();
         ordenDeCompra.setEstado("SOLICITADA");
