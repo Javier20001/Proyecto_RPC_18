@@ -29,7 +29,7 @@ export interface Producto {
 }
 
 export interface ProductoEnTienda {
-  id_productoEnTienda: number;
+  id: number;
   producto: Producto;
   tienda?: Tienda;
   stock: number;

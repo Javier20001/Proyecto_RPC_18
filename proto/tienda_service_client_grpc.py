@@ -59,7 +59,7 @@ class TiendaClient:
                 provincia=provincia,
                 ciudad=ciudad,
                 direccion=direccion,
-                habilitada=habilitada
+                habilitada=True
             )
             response = self.stub.AddTienda(new_tienda)
             print(f"Tienda añadida: ID={response.id}, Código={response.codigo}, Provincia={response.provincia}, Ciudad={response.ciudad}, Dirección={response.direccion}, Habilitada={response.habilitada}")

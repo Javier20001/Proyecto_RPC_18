@@ -70,7 +70,7 @@ const ModalProductosParaAgregar: React.FC<modalProps> = ({ tienda_id }) => {
               <TableBody>
                 {productosSinTienda.map((product) => (
                   <TableRow
-                    key={product.id_productoEnTienda}
+                    key={product.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell scope="row">{product.producto.codigo}</TableCell>

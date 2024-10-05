@@ -18,15 +18,12 @@ interface modalProps {
 
 const ModalProductosDeTienda: React.FC<modalProps> = ({ tienda }) => {
   const [open, setOpen] = React.useState(false);
-  const { productosEnTienda } = useProductoEnTiendaContext();
+  const { filter_Productos_By_Tienda } = useProductoEnTiendaContext();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // Filtrar productos que pertenezcan a la tienda con el mismo id
-  const productosFiltrados = productosEnTienda.filter(
-    (product) => product.tienda?.codigo === tienda?.id
-  );
+  const productosFiltrados = filter_Productos_By_Tienda(tienda?.id);
 
   return (
     <div>
@@ -55,7 +52,7 @@ const ModalProductosDeTienda: React.FC<modalProps> = ({ tienda }) => {
                 <TableBody>
                   {productosFiltrados.map((product) => (
                     <TableRow
-                      key={product.id_productoEnTienda}
+                      key={product.id}
                       sx={{
                         "&:last-child td, &:last-child th": { border: 0 },
                       }}
