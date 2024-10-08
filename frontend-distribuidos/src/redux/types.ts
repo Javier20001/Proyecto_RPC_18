@@ -1,13 +1,13 @@
 // Interface para la tabla User
 export interface User {
-  idUser: number;
+  id: number;
   username: string;
-  password: string;
   nombre: string;
   apellido: string;
   habilitado: boolean;
   rol: string;
   tiendaID: number;
+  password: string;
 }
 
 export interface Tienda {
@@ -92,4 +92,15 @@ export interface updatProductStock {
   stock: number;
   talle: string;
   color: string;
+}
+
+export interface LoginDTO {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  id: number;
+  message: string;
+  role: string;
 }

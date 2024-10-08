@@ -17,7 +17,7 @@ const initialState: UsersState = {
 
 // Traer todos los usuarios
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  const response = await axios.get<User[]>("http://localhost:8080/usuarios");
+  const response = await axios.get<User[]>("http://localhost:8081/usuarios");
   return response.data;
 });
 
@@ -27,7 +27,7 @@ export const addUser = createAsyncThunk(
   async (userDTO: UserDTO, { rejectWithValue }) => {
     try {
       const response = await axios.post<User>(
-        "http://localhost:8080/usuarios",
+        "http://127.0.0.1:8081/usuarios",
         userDTO
       );
       return response.data;
@@ -50,7 +50,7 @@ export const updateUser = createAsyncThunk(
   ) => {
     try {
       const response = await axios.put<User>(
-        `http://localhost:8080/usuarios/${id}`,
+        `http://localhost:8081/usuarios/${id}`,
         userDTO
       );
       return response.data;
@@ -68,7 +68,7 @@ export const updateUser = createAsyncThunk(
 export const deleteUser = createAsyncThunk(
   "user/deleteUser",
   async (userId: number) => {
-    await axios.delete(`http://localhost:8080/usuarios/${userId}`);
+    await axios.delete(`http://localhost:8081/usuarios/${userId}`);
     return userId;
   }
 );
@@ -112,7 +112,7 @@ const userSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.status = "succeeded";
         const index = state.users.findIndex(
-          (user) => user.idUser === action.payload.idUser
+          (user) => user.id === action.payload.id
         );
         if (index !== -1) {
           state.users[index] = action.payload;
@@ -129,9 +129,7 @@ const userSlice = createSlice({
       })
       .addCase(deleteUser.fulfilled, (state, action: PayloadAction<number>) => {
         state.status = "succeeded";
-        state.users = state.users.filter(
-          (user) => user.idUser !== action.payload
-        );
+        state.users = state.users.filter((user) => user.id !== action.payload);
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.status = "failed";

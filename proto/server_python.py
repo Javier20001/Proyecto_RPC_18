@@ -469,7 +469,7 @@ def modify_producto_manager():
         'stock': response.stock,
         'talle': response.talle,
         'color': response.color
-    }), 200
+    }),200
 
 @app.route('/producto/stock_manager', methods=['PUT'])
 def modify_stock_manager():
@@ -484,7 +484,13 @@ def modify_stock_manager():
     response = productomanagerclient.modify_stock(producto_id, tienda_id, stock, talle, color)
     return jsonify({
         'id_productoEnTienda': response.id,
-        'stock': response.stock
+        'producto': {
+            'nombre': response.producto.nombre,  # Aquí mapeas los atributos del objeto Producto
+            'codigo': response.producto.codigo   # Agrega más atributos según tu mensaje Producto
+        },
+        'stock': response.stock,
+        'talle': response.talle,
+        'color': response.color
     }), 200
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -495,14 +501,12 @@ def add_user():
         data = request.json
         username = data.get('username')
         password = data.get('password')
-        tienda_id = int(data.get('tienda'))  # Obtener el valor de tienda
+        tienda_id = int(data.get('tienda_id'))  # Obtener el valor de tienda
         nombre = data.get('nombre')
         apellido = data.get('apellido')
-        rol = data.get('rol')
-        habilitado = data.get('habilitado')
 
         # Llamar al método add_user del cliente gRPC
-        user = user_client.add_user(username, password, tienda_id, nombre, apellido, habilitado, rol)
+        user = user_client.add_user(username, password, tienda_id, nombre, apellido)
 
         if user:
             return jsonify({
@@ -511,7 +515,8 @@ def add_user():
                 'nombre': user.nombre,
                 'apellido': user.apellido,
                 'rol': user.rol,
-                'habilitado': user.habilitado
+                'habilitado': user.habilitado,
+                'tiendaID': user.tienda.id
             }), 201
         else:
             return jsonify({'error': 'Unable to add user'}), 500
@@ -530,11 +535,9 @@ def modify_user(user_id):
         tienda_id = data.get('tienda_id')  # Asegúrate de que este campo esté presente
         nombre = data.get('nombre')
         apellido = data.get('apellido')
-        rol = data.get('rol')
-        habilitado = data.get('habilitado')
 
         # Llamar al método modify_user del cliente gRPC para modificar el usuario
-        user = user_client.modify_user(user_id, username, password, tienda_id, nombre, apellido, habilitado, rol)
+        user = user_client.modify_user(user_id, username, password, tienda_id, nombre, apellido)
 
         if user:
             # Formatear la respuesta con los datos del usuario modificado
@@ -544,7 +547,8 @@ def modify_user(user_id):
                 'nombre': user.nombre,
                 'apellido': user.apellido,
                 'rol': user.rol,
-                'habilitado': user.habilitado
+                'habilitado': user.habilitado,
+                'tiendaID': user.tienda.id
             }), 200
         else:
             return jsonify({'error': 'Unable to modify user'}), 500
@@ -572,7 +576,7 @@ def find_all_users():
                 'apellido': user.apellido,
                 'rol': user.rol,
                 'habilitado': user.habilitado,
-                'tienda': user.tienda.id
+                'tiendaID': user.tienda.id
                 
             } for user in users.user]  # `users.users` es la lista dentro del mensaje `Users`
 
@@ -692,13 +696,15 @@ def disable_user(user_id):
 
 #------------------------------------------------------------------------------------------------------------------------------
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['POST'])
 def login():
     try:
         # Obtener los datos del cuerpo de la solicitud
-        data = request.json
+        data = request.get_json()
         username = data.get('username')
         password = data.get('password')
+
+        print(username+", "+ password )
 
         # Verificar que ambos campos estén presentes
         if not username or not password:
@@ -706,15 +712,14 @@ def login():
 
         # Llamar al método login del cliente gRPC
         response = login_client.login(username, password)
-
-        if response:
+        if response.message == "Contraseña incorrecta":
+            return jsonify({'error': 'Invalid username or password'}), 401
+        else:
             return jsonify({
                 'message': response.message,
                 'role': response.role,
                 'id': response.id
             }), 200
-        else:
-            return jsonify({'error': 'Invalid username or password'}), 401
     except Exception as e:
         print(f"Error en login_user: {str(e)}")  # Añadir un print para depuración
         return jsonify({'error': str(e)}), 500

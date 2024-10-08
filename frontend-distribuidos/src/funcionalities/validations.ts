@@ -3,6 +3,10 @@ export interface ValidationErrors {
   provincia?: string;
   ciudad?: string;
   dirección?: string;
+  nombre?: string;
+  username?: string;
+  apellido?: string;
+  password?: string;
 }
 
 export const storeValidation = (
@@ -34,59 +38,53 @@ export const storeValidation = (
   return newErrors;
 };
 
-// export const validationTime = (
-//   startTime: string,
-//   endTime: string
-// ): ValidationErrors => {
-//   const newErrors: ValidationErrors = {};
+export const userValidationWithPassword = (
+  nombre: string,
+  username: string,
+  apellido: string
+): ValidationErrors => {
+  const newErrors: ValidationErrors = {};
 
-//   if (!startTime) {
-//     newErrors.startTime = "El campo 'Horr Inicio' no debe estar vacío.";
-//   }
+  if (!nombre) {
+    newErrors.nombre = "El campo 'nombre' no debe estar vacío.";
+  } else if (nombre.length < 2) {
+    newErrors.nombre = "El campo 'nombre' debe tener al menos 2 caracteres.";
+  }
 
-//   if (!endTime) {
-//     newErrors.endTime = "El campo 'Hora Fin' no debe estar vacío.";
-//   }
-//   return newErrors;
-// };
+  if (!username) {
+    newErrors.username = "El campo 'username' no debe estar vacío.";
+  } else if (username.length < 2) {
+    newErrors.username =
+      "El campo 'username' debe tener al menos 2 caracteres.";
+  }
 
-// export const validateFormSpecialist = (
-//   firstName: string,
-//   lastName: string,
-//   dni: string,
-//   email: string
-// ): ValidationErrors => {
-//   const newErrors: ValidationErrors = {};
+  if (!apellido) {
+    newErrors.apellido = "El campo 'apellido' no debe estar vacío.";
+  } else if (apellido.length < 2) {
+    newErrors.apellido =
+      "El campo 'apellido' debe tener al menos 2 caracteres.";
+  }
+  return newErrors;
+};
 
-//   if (!firstName) {
-//     newErrors.firstName = "El campo 'nombre' no debe estar vacío.";
-//   } else if (firstName.length < 2) {
-//     newErrors.firstName = "El campo 'nombre' debe tener al menos 2 caracteres.";
-//   }
+export const userValidationWithoutPassword = (
+  nombre: string,
+  username: string,
+  apellido: string,
+  password: string
+): ValidationErrors => {
+  const newErrors: ValidationErrors = userValidationWithPassword(
+    nombre,
+    username,
+    apellido
+  );
 
-//   if (!lastName) {
-//     newErrors.lastName = "El campo 'apellido' no debe estar vacío.";
-//   } else if (lastName.length < 2) {
-//     newErrors.lastName =
-//       "El campo 'apellido' debe tener al menos 2 caracteres.";
-//   }
+  if (!password) {
+    newErrors.password = "El campo 'password' no debe estar vacío.";
+  } else if (password.length < 2) {
+    newErrors.password =
+      "El campo 'password' debe tener al menos 2 caracteres.";
+  }
 
-//   if (!dni) {
-//     newErrors.dni = "El campo 'dni' no debe estar vacío.";
-//   } else if (dni.length < 7 || dni.length > 8) {
-//     newErrors.dni = "El campo 'dni' debe tener entre 7 y 8 dígitos.";
-//   } else if (!/^\d+$/.test(dni)) {
-//     newErrors.dni = "El campo 'dni' debe contener solo dígitos númericos.";
-//   }
-
-//   //const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//   if (!email) {
-//     newErrors.email = "El campo 'email' no debe estar vacío.";
-//   }
-//   //   } else if (!emailRegex.test(email)) {
-//   //     newErrors.email =
-//   //       "El campo 'email' debe ser una dirección de correo electrónico válida.";
-//   //   }
-
-//   return newErrors;
-// };
+  return newErrors;
+};

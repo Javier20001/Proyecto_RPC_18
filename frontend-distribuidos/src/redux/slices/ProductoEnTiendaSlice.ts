@@ -151,10 +151,10 @@ export const updateStock = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.put<{
-        id: number;
-        stock: number;
-      }>("http://127.0.0.1:8081/producto/stock_manager", updateData);
+      const response = await axios.put<ProductoEnTienda>(
+        "http://127.0.0.1:8081/producto/stock_manager",
+        updateData
+      );
       return response.data;
     } catch (error: unknown) {
       const errorMessage = handleAxiosError(
@@ -309,13 +309,13 @@ const productoEnTiendaSlice = createSlice({
       })
       .addCase(
         updateStock.fulfilled,
-        (state, action: PayloadAction<{ id: number; stock: number }>) => {
+        (state, action: PayloadAction<ProductoEnTienda>) => {
           state.status = "succeeded";
           const index = state.productosEnTienda.findIndex(
             (item) => item.id === action.payload.id
           );
           if (index !== -1) {
-            state.productosEnTienda[index].stock = action.payload.stock;
+            state.productosEnTienda[index] = action.payload;
           }
         }
       )
