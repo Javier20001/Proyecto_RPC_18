@@ -2,55 +2,23 @@ package com.kafka.provider.dtos;
 
 import com.kafka.provider.entities.ProductProvider;
 import jakarta.persistence.Column;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class ProductProviderDTO {
+
+    private int id;
     private String codigo;
-
     private String color;
-
     private String talle;
-
     private int stock;
-
-    public ProductProviderDTO(String codigo, String color, String talle, int stock) {
-        this.codigo = codigo;
-        this.color = color;
-        this.talle = talle;
-        this.stock = stock;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getTalle() {
-        return talle;
-    }
-
-    public void setTalle(String talle) {
-        this.talle = talle;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
-
+    private String foto;
 
     public ProductProvider toProductProvider(){
         ProductProvider pp = new ProductProvider();
@@ -58,6 +26,7 @@ public class ProductProviderDTO {
         pp.setColor(this.getColor());
         pp.setTalle(this.getTalle());
         pp.setStock(this.getStock());
+        pp.setFoto(this.getFoto());
         return pp;
     }
 }

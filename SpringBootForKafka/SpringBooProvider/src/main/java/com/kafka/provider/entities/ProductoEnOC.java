@@ -1,14 +1,15 @@
 package com.kafka.provider.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "producto_provider")
+@Table(name = "producto_en_oc")
 @Data
 @NoArgsConstructor
-public class ProductProvider {
+public class ProductoEnOC {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,21 +24,22 @@ public class ProductProvider {
     @Column(name = "talle", nullable = false, length = 50)
     private String talle;
 
-    @Column(name = "stock", nullable = false)
-    private int stock;
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "orden_de_compra_id", nullable = false)
+    private OrdenDeCompra ordenDeCompra;
 
-    @Column(name = "foto", nullable = true)
-    private String foto;
+    @Column(name = "cantidad_solicitada", nullable = false)
+    private int cantidadSolicitada;
 
     @Override
     public String toString() {
-        return "ProductProvider{" +
+        return "ProductoEnOC{" +
                 "id=" + id +
                 ", codigo='" + codigo + '\'' +
                 ", color='" + color + '\'' +
                 ", talle='" + talle + '\'' +
-                ", stock=" + stock +
-                ", foto='" + foto + '\'' +
+                ", cantidadSolicitada=" + cantidadSolicitada +
                 '}';
     }
 }

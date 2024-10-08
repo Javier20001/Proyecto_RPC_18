@@ -1,4 +1,4 @@
-package com.kafka.consumer.entities;
+package com.kafka.provider.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;

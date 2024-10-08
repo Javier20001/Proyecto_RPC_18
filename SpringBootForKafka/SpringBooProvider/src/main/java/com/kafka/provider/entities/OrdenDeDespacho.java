@@ -1,4 +1,4 @@
-package com.kafka.consumer.entities;
+package com.kafka.provider.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
