@@ -40,3 +40,20 @@
 .read-the-docs {
   color: #888;
 }
+
+.product-list {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  width: 100%; /* Ocupa todo el ancho */
+  max-width: 800px; /* Limita el ancho máximo */
+  margin: 0 auto; /* Centra el contenedor */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Asegúrate de que esto esté presente */
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
