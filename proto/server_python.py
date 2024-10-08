@@ -2,10 +2,11 @@ import sys
 import grpc
 from flask_cors import CORS
 from flask import Flask, jsonify, request
-from tienda_service_client_grpc import TiendaClient
-from user_service_client_grpc import UserClient 
-from producto_service_client_grpc import ProductoClient 
-from producto_manager_cliente_grpc import ProductoManagerClient
+from Tienda_Service.tienda_service_client_grpc import TiendaClient
+from User_Service.user_service_client_grpc import UserClient 
+from Producto_Service.producto_service_client_grpc import ProductoClient 
+from Producto_Manager_Service.producto_manager_cliente_grpc import ProductoManagerClient
+from Login_Service.login_service_client_grpc import LoginClient
 import producto_manager_pb2
 import producto_manager_pb2_grpc
 
@@ -18,7 +19,7 @@ tiendaclient = TiendaClient(channel)
 user_client = UserClient(channel)
 productoclient = ProductoClient(channel)
 productomanagerclient = ProductoManagerClient(channel)
-
+login_client = LoginClient(channel)
 
 @app.route('/tiendas', methods=['GET'])
 def gettiendas():
@@ -487,6 +488,240 @@ def modify_stock_manager():
         'id_productoEnTienda': response.id,
         'stock': response.stock
     }), 200
+#-----------------------------------------------------------------------------------------------------------------------
+
+@app.route('/usuarios', methods=['POST'])
+def add_user():
+    try:
+        # Obtener datos del cuerpo de la solicitud
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+        tienda_id = int(data.get('tienda'))  # Obtener el valor de tienda
+        nombre = data.get('nombre')
+        apellido = data.get('apellido')
+        rol = data.get('rol')
+        habilitado = data.get('habilitado')
+
+        # Llamar al método add_user del cliente gRPC
+        user = user_client.add_user(username, password, tienda_id, nombre, apellido, habilitado, rol)
+
+        if user:
+            return jsonify({
+                'id': user.id,
+                'username': user.username,
+                'nombre': user.nombre,
+                'apellido': user.apellido,
+                'rol': user.rol,
+                'habilitado': user.habilitado
+            }), 201
+        else:
+            return jsonify({'error': 'Unable to add user'}), 500
+    except Exception as e:
+        print(f"Error en add_user: {str(e)}")  # Añadir un print para depuración
+        return jsonify({'error': f'Exception occurred: {str(e)}'}), 500
+    
+
+@app.route('/usuarios/<int:user_id>', methods=['PUT'])
+def modify_user(user_id):
+    try:
+        # Obtener los datos del cuerpo de la solicitud
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')  # Si el password no se quiere modificar, maneja eso aquí
+        tienda_id = data.get('tienda_id')  # Asegúrate de que este campo esté presente
+        nombre = data.get('nombre')
+        apellido = data.get('apellido')
+        rol = data.get('rol')
+        habilitado = data.get('habilitado')
+
+        # Llamar al método modify_user del cliente gRPC para modificar el usuario
+        user = user_client.modify_user(user_id, username, password, tienda_id, nombre, apellido, habilitado, rol)
+
+        if user:
+            # Formatear la respuesta con los datos del usuario modificado
+            return jsonify({
+                'id': user.id,
+                'username': user.username,
+                'nombre': user.nombre,
+                'apellido': user.apellido,
+                'rol': user.rol,
+                'habilitado': user.habilitado
+            }), 200
+        else:
+            return jsonify({'error': 'Unable to modify user'}), 500
+    except Exception as e:
+        print(f"Error en modify_user: {str(e)}")  # Añadir un print para depuración
+        return jsonify({'error': str(e)}), 500
+
+
+
+    
+
+@app.route('/usuarios', methods=['GET'])
+def find_all_users():
+    try:
+        # Llamar al método find_all_users del cliente gRPC
+        users = user_client.find_all()
+
+        # Si se encuentran usuarios, los mapeamos a una lista de diccionarios para devolver en JSON
+        if users:
+            users_list = [{
+                'id': user.id,
+                'username': user.username,
+                'password': user.password, 
+                'nombre': user.nombre,
+                'apellido': user.apellido,
+                'rol': user.rol,
+                'habilitado': user.habilitado,
+                'tienda': user.tienda.id
+                
+            } for user in users.user]  # `users.users` es la lista dentro del mensaje `Users`
+
+            return jsonify(users_list), 200
+        else:
+            return jsonify({'error': 'No users found'}), 404
+    except Exception as e:
+        print(f"Error en find_all_users: {str(e)}")  # Añadir un print para depuración
+        return jsonify({'error': f'Exception occurred: {str(e)}'}), 500
+
+@app.route('/usuarios/<int:user_id>', methods=['GET'])
+def find_user_by_id(user_id):
+    try:
+        # Llamar al método find_by_id del cliente gRPC con el ID del usuario
+        user = user_client.find_by_id(user_id)
+
+        # Si el usuario es encontrado, mapeamos el resultado a un diccionario para devolver en JSON
+        if user:
+            user_data = {
+                'id': user.id,
+                'username': user.username,
+                'nombre': user.nombre,
+                'apellido': user.apellido,
+                'rol': user.rol,
+                'habilitado': user.habilitado,
+                'tienda': user.tienda.id
+            }
+
+            return jsonify(user_data), 200
+        else:
+            return jsonify({'error': 'User not found'}), 404
+    except Exception as e:
+        print(f"Error en find_user_by_id: {str(e)}")  # Añadir un print para depuración
+        return jsonify({'error': f'Exception occurred: {str(e)}'}), 500
+    
+
+@app.route('/usuarios/username/<username>', methods=['GET'])
+def find_user_by_username(username):
+    try:
+        # Validar que se recibió el username
+        if not username:
+            return jsonify({'error': 'Username es requerido'}), 400
+
+        # Llamar al método find_by_username del cliente gRPC
+        user = user_client.find_by_username(username)
+
+        # Si el usuario es encontrado, mapeamos el resultado a un diccionario para devolver en JSON
+        if user:
+            user_data = {
+                'id': user.id,
+                'username': user.username,
+                'nombre': user.nombre,
+                'apellido': user.apellido,
+                'rol': user.rol,
+                'habilitado': user.habilitado,
+                'tienda': user.tienda.id
+            }
+
+            return jsonify(user_data), 200
+        else:
+            return jsonify({'error': 'User not found'}), 404
+    except Exception as e:
+        print(f"Error en find_user_by_username: {str(e)}")  # Añadir un print para depuración
+        return jsonify({'error': f'Exception occurred: {str(e)}'}), 500
+    
+@app.route('/usuarios/tienda/<int:tienda_id>', methods=['GET'])
+def find_all_by_tienda(tienda_id):
+    try:
+        # Validar que se recibió el tienda_id
+        if not tienda_id:
+            return jsonify({'error': 'Tienda ID es requerido'}), 400
+
+        # Llamar al método find_all_by_tienda del cliente gRPC
+        users = user_client.find_all_by_tienda(tienda_id)
+
+        # Si se encuentran usuarios, los mapeamos a una lista de diccionarios para devolver en JSON
+        if users:
+            users_list = [{
+                'id': user.id,
+                'username': user.username,
+                'nombre': user.nombre,
+                'apellido': user.apellido,
+                'rol': user.rol,
+                'habilitado': user.habilitado,
+                'tienda': user.tienda.id
+            } for user in users.user]  # `users.users` es la lista dentro del mensaje `Users`
+
+            return jsonify(users_list), 200
+        else:
+            return jsonify({'error': 'No users found for the given tienda'}), 404
+    except Exception as e:
+        print(f"Error en find_all_by_tienda: {str(e)}")  # Añadir un print para depuración
+        return jsonify({'error': f'Exception occurred: {str(e)}'}), 500
+    
+
+    
+@app.route('/usuarios/<int:user_id>/disable', methods=['DELETE'])
+def disable_user(user_id):
+    try:
+        # Llamar al método disable_user del cliente gRPC para deshabilitar al usuario
+        user = user_client.disable_user(user_id)
+
+        if user:
+            # Formatear la respuesta con los datos del usuario deshabilitado
+            return jsonify({
+                'id': user.id,
+                'username': user.username,
+                'nombre': user.nombre,
+                'apellido': user.apellido,
+                'rol': user.rol,
+                'habilitado': user.habilitado  # Se espera que este campo sea False tras la deshabilitación
+            }), 200
+        else:
+            return jsonify({'error': 'Unable to disable user'}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+#------------------------------------------------------------------------------------------------------------------------------
+
+@app.route('/login', methods=['GET'])
+def login():
+    try:
+        # Obtener los datos del cuerpo de la solicitud
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+
+        # Verificar que ambos campos estén presentes
+        if not username or not password:
+            return jsonify({'error': 'Username and password are required'}), 400
+
+        # Llamar al método login del cliente gRPC
+        response = LoginClient.login(username, password)
+
+        if response:
+            return jsonify({
+                'message': response.message,
+                'role': response.role,
+                'id': response.id
+            }), 200
+        else:
+            return jsonify({'error': 'Invalid username or password'}), 401
+    except Exception as e:
+        print(f"Error en login_user: {str(e)}")  # Añadir un print para depuración
+        return jsonify({'error': str(e)}), 500
+    
+
 
 
 if __name__ == '__main__':
