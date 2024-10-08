@@ -13,7 +13,7 @@ public class MensajeServiceImpl extends MensajeServiceGrpc.MensajeServiceImplBas
         String mensaje = request.getMensaje();
         // Construir la respuesta basada en la solicitud
         MensajeResponse response = MensajeResponse.newBuilder()
-                .setRespuesta("Mensaje recibido: " + mensaje)
+                .setRespuesta("Mensaje recibido cliente: " + mensaje)
                 .build();
 
         // Enviar la respuesta al cliente
