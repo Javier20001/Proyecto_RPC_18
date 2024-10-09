@@ -30,7 +30,7 @@ public class ProductProviderController {
 
     //sirve para actualizar el stock del producto y su foto, en caso de querer actualizar demas campos descomentar codigo en productProviderService.actualizarProducto
     @PutMapping("/{id}")
-    public ResponseEntity<ProductProviderDTO> actualizarProducto(@PathVariable int id, @RequestBody ProductProviderDTO productProviderDTO) throws JsonProcessingException {
+    public ResponseEntity<  ProductProviderDTO> actualizarProducto(@PathVariable int id, @RequestBody ProductProviderDTO productProviderDTO) throws JsonProcessingException {
         return productProviderService.actualizarProducto(id, productProviderDTO);
     }
 
