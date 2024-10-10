@@ -3,14 +3,16 @@ import React from "react";
 import { Modal, Typography } from "@mui/material";
 import "./Modal.css";
 import FormStore from "../forms/StoreForm";
-import { ProductoEnTienda, Tienda } from "../../redux/types";
+import { ProductoEnTienda, Tienda, User } from "../../redux/types";
 import FormProductoEnTienda from "../forms/ProductosForm";
+import UserForm from "../forms/UserForm";
 
 interface modalProps {
   titulo: string;
   proveniencia: string;
   tienda?: Tienda;
   producto?: ProductoEnTienda;
+  user?: User;
 }
 
 const BasicModal: React.FC<modalProps> = ({
@@ -18,6 +20,7 @@ const BasicModal: React.FC<modalProps> = ({
   tienda,
   proveniencia,
   producto,
+  user,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -47,26 +50,10 @@ const BasicModal: React.FC<modalProps> = ({
               handleClose={handleClose}
             />
           )}
-          {/* {proveniencia === "specialist" && (
-            <FormSpecialist specialist={specialist} handleClose={handleClose} />
-          )}
-          {proveniencia === "schedules" && (
-            <FormSchedule
-              schedule={schedule}
-              specialistID={specialistID ?? 0}
-              handleClose={handleClose}
-            />
-          )}
-          {proveniencia === "receta" && (
-            <FormPrescription
-              prescription={prescription}
-              idShift={shiftID}
-              handleClose={handleClose}
-            />
-          )}
-          {proveniencia === "contacto" && <FormEmailSender />}
 
-          {proveniencia === "servicios" && <FormServices />} */}
+          {proveniencia === "user" && (
+            <UserForm user={user} handleClose={handleClose} />
+          )}
         </div>
       </Modal>
     </div>

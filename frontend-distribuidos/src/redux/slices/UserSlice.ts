@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { handleAxiosError } from "../../Errors/HandlerAxiosError";
-import { User, UserDTO } from "../types"; // Asegúrate de definir estos tipos en tu archivo de tipos.
+import { User, UserDTO } from "../types";
 
 interface UsersState {
   users: User[];
@@ -15,19 +15,17 @@ const initialState: UsersState = {
   error: null,
 };
 
-// Traer todos los usuarios
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  const response = await axios.get<User[]>("http://localhost:8080/usuarios");
+  const response = await axios.get<User[]>("http://localhost:8081/usuarios");
   return response.data;
 });
 
-// Agregar usuario
 export const addUser = createAsyncThunk(
   "user/addUser",
   async (userDTO: UserDTO, { rejectWithValue }) => {
     try {
       const response = await axios.post<User>(
-        "http://localhost:8080/usuarios",
+        "http://127.0.0.1:8081/usuarios",
         userDTO
       );
       return response.data;
@@ -41,7 +39,6 @@ export const addUser = createAsyncThunk(
   }
 );
 
-// Actualizar usuario
 export const updateUser = createAsyncThunk(
   "user/updateUser",
   async (
@@ -50,7 +47,7 @@ export const updateUser = createAsyncThunk(
   ) => {
     try {
       const response = await axios.put<User>(
-        `http://localhost:8080/usuarios/${id}`,
+        `http://localhost:8081/usuarios/${id}`,
         userDTO
       );
       return response.data;
@@ -64,12 +61,57 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-// Eliminar usuario
+export const findUserByUsername = createAsyncThunk(
+  "user/findUserByUsername",
+  async (username: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.get<User>(
+        `http://localhost:8081/usuarios/username/${username}`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      const errorMessage = handleAxiosError(
+        error,
+        "Error al buscar usuario por nombre de usuario"
+      );
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const findUsersByTienda = createAsyncThunk(
+  "users/findUsersByTienda",
+  async (tienda_id: number, { rejectWithValue }) => {
+    try {
+      const response = await axios.get<User[]>(
+        `http://localhost:8081/usuarios/tienda/${tienda_id}`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      const errorMessage = handleAxiosError(
+        error,
+        "Error al buscar usuarios por tienda"
+      );
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 export const deleteUser = createAsyncThunk(
-  "user/deleteUser",
-  async (userId: number) => {
-    await axios.delete(`http://localhost:8080/usuarios/${userId}`);
-    return userId;
+  "user/disableUser",
+  async (userId: number, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete<User>(
+        `http://localhost:8081/usuarios/${userId}/disable`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      const errorMessage = handleAxiosError(
+        error,
+        "Error al deshabilitar el usuario"
+      );
+      return rejectWithValue(errorMessage);
+    }
   }
 );
 
@@ -79,7 +121,6 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Casos para traer todos los usuarios
       .addCase(fetchUsers.pending, (state) => {
         state.status = "loading";
       })
@@ -92,7 +133,6 @@ const userSlice = createSlice({
         state.error = action.error.message || "Algo salió mal";
       })
 
-      // Casos para agregar usuario
       .addCase(addUser.pending, (state) => {
         state.status = "loading";
       })
@@ -104,15 +144,13 @@ const userSlice = createSlice({
         state.status = "failed";
         state.error = action.payload as string;
       })
-
-      // Casos para actualizar usuario
       .addCase(updateUser.pending, (state) => {
         state.status = "loading";
       })
       .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.status = "succeeded";
         const index = state.users.findIndex(
-          (user) => user.idUser === action.payload.idUser
+          (user) => user.id === action.payload.id
         );
         if (index !== -1) {
           state.users[index] = action.payload;
@@ -123,19 +161,45 @@ const userSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Casos para eliminar usuario
       .addCase(deleteUser.pending, (state) => {
         state.status = "loading";
       })
       .addCase(deleteUser.fulfilled, (state, action: PayloadAction<number>) => {
         state.status = "succeeded";
-        state.users = state.users.filter(
-          (user) => user.idUser !== action.payload
-        );
+        state.users = state.users.filter((user) => user.id !== action.payload);
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "Algo salió mal";
+      })
+      .addCase(findUserByUsername.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        findUserByUsername.fulfilled,
+        (state, action: PayloadAction<User>) => {
+          state.status = "succeeded";
+          state.users = [action.payload]; // Puede ser un solo usuario
+        }
+      )
+      .addCase(findUserByUsername.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
+      })
+
+      .addCase(findUsersByTienda.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        findUsersByTienda.fulfilled,
+        (state, action: PayloadAction<User[]>) => {
+          state.status = "succeeded";
+          state.users = action.payload;
+        }
+      )
+      .addCase(findUsersByTienda.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
       });
   },
 });

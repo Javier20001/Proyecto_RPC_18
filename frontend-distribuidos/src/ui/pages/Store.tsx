@@ -1,8 +1,11 @@
+import StoreFilter from "../../components/filter/StoreFilter";
 import StoreList from "../../components/list/StoreList";
+import "./css/PagesStyle.css";
 
 const Store: React.FC = () => {
   return (
-    <div>
+    <div className="page">
+      <StoreFilter />
       <StoreList />
     </div>
   );

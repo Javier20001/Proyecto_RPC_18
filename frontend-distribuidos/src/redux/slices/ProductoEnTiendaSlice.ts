@@ -21,8 +21,6 @@ const initialState: ProductosEnTiendaState = {
   error: null,
 };
 
-// Traer todos los productos que esten o no en tienda
-
 export const fetchProductosEnTienda = createAsyncThunk(
   "productosEnTienda/fetchProductosEnTienda",
   async () => {
@@ -33,7 +31,6 @@ export const fetchProductosEnTienda = createAsyncThunk(
   }
 );
 
-// Traer productos en tienda por tienda_id
 export const fetchProductosEnTiendaByTiendaId = createAsyncThunk(
   "productosEnTienda/fetchProductosEnTiendaByTiendaId",
   async (tienda_id: number, { rejectWithValue }) => {
@@ -52,7 +49,6 @@ export const fetchProductosEnTiendaByTiendaId = createAsyncThunk(
   }
 );
 
-// Traer producto en tienda por producto_id y tienda_id
 export const fetchProductoEnTiendaById = createAsyncThunk(
   "productosEnTienda/fetchProductoEnTiendaById",
   async (
@@ -74,7 +70,6 @@ export const fetchProductoEnTiendaById = createAsyncThunk(
   }
 );
 
-// Asignar producto a tienda
 export const assignProductoToTienda = createAsyncThunk(
   "productosEnTienda/assignProductoToTienda",
   async (
@@ -97,7 +92,6 @@ export const assignProductoToTienda = createAsyncThunk(
   }
 );
 
-// Agregar nuevo producto sin asignar la tienda
 export const addProductoEnTienda = createAsyncThunk(
   "productosEnTienda/addProductoEnTienda",
   async (
@@ -120,7 +114,6 @@ export const addProductoEnTienda = createAsyncThunk(
   }
 );
 
-// Actualizar producto en tienda
 export const updateProductoEnTienda = createAsyncThunk(
   "productosEnTienda/updateProductoEnTienda",
   async (
@@ -143,7 +136,6 @@ export const updateProductoEnTienda = createAsyncThunk(
   }
 );
 
-// Modificar stock del producto en tienda
 export const updateStock = createAsyncThunk(
   "productosEnTienda/updateStock",
   async (
@@ -151,10 +143,10 @@ export const updateStock = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.put<{
-        id: number;
-        stock: number;
-      }>("http://127.0.0.1:8081/producto/stock_manager", updateData);
+      const response = await axios.put<ProductoEnTienda>(
+        "http://127.0.0.1:8081/producto/stock_manager",
+        updateData
+      );
       return response.data;
     } catch (error: unknown) {
       const errorMessage = handleAxiosError(
@@ -166,7 +158,6 @@ export const updateStock = createAsyncThunk(
   }
 );
 
-// Filtrar productos en tienda
 export const filterProductosEnTienda = createAsyncThunk(
   "productosEnTienda/filterProductosEnTienda",
   async (
@@ -195,7 +186,7 @@ const productoEnTiendaSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Casos para traer todos los productos en tienda
+
       .addCase(fetchProductosEnTienda.pending, (state) => {
         state.status = "loading";
       })
@@ -211,7 +202,6 @@ const productoEnTiendaSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Casos para traer productos en tienda por tienda_id
       .addCase(fetchProductosEnTiendaByTiendaId.pending, (state) => {
         state.status = "loading";
       })
@@ -227,7 +217,6 @@ const productoEnTiendaSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Casos para traer producto en tienda por producto_id y tienda_id
       .addCase(fetchProductoEnTiendaById.pending, (state) => {
         state.status = "loading";
       })
@@ -250,7 +239,6 @@ const productoEnTiendaSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Casos para asignar producto a tienda
       .addCase(assignProductoToTienda.pending, (state) => {
         state.status = "loading";
       })
@@ -258,7 +246,6 @@ const productoEnTiendaSlice = createSlice({
         assignProductoToTienda.fulfilled,
         (state, action: PayloadAction<{ message: string }>) => {
           state.status = "succeeded";
-          // Puedes manejar el mensaje de éxito si lo deseas
         }
       )
       .addCase(assignProductoToTienda.rejected, (state, action) => {
@@ -266,7 +253,6 @@ const productoEnTiendaSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Casos para agregar nuevo producto en tienda
       .addCase(addProductoEnTienda.pending, (state) => {
         state.status = "loading";
       })
@@ -282,7 +268,6 @@ const productoEnTiendaSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Casos para actualizar producto en tienda
       .addCase(updateProductoEnTienda.pending, (state) => {
         state.status = "loading";
       })
@@ -303,19 +288,18 @@ const productoEnTiendaSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Casos para actualizar stock del producto en tienda
       .addCase(updateStock.pending, (state) => {
         state.status = "loading";
       })
       .addCase(
         updateStock.fulfilled,
-        (state, action: PayloadAction<{ id: number; stock: number }>) => {
+        (state, action: PayloadAction<ProductoEnTienda>) => {
           state.status = "succeeded";
           const index = state.productosEnTienda.findIndex(
             (item) => item.id === action.payload.id
           );
           if (index !== -1) {
-            state.productosEnTienda[index].stock = action.payload.stock;
+            state.productosEnTienda[index] = action.payload;
           }
         }
       )
@@ -324,7 +308,6 @@ const productoEnTiendaSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Casos para filtrar productos en tienda
       .addCase(filterProductosEnTienda.pending, (state) => {
         state.status = "loading";
       })

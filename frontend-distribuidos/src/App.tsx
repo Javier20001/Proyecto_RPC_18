@@ -5,18 +5,23 @@ import Router from "./routes/Routes";
 import NavBar from "./ui/navbar/Navbar";
 import { ProductoEnTiendaProvider } from "../src/hooks/ProductContext";
 import { StoreProvider } from "../src/hooks/StoreContext";
+import { AuthProvider } from "./hooks/AuthContext";
+
+import { UserProvider } from "./hooks/UserContext";
 const App: React.FC = () => {
   return (
-    <>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <StoreProvider>
           <ProductoEnTiendaProvider>
-            <NavBar />
-            <Router />
+            <UserProvider>
+              <NavBar />
+              <Router />
+            </UserProvider>
           </ProductoEnTiendaProvider>
         </StoreProvider>
-      </BrowserRouter>
-    </>
+      </AuthProvider>
+    </BrowserRouter>
   );
 };
 

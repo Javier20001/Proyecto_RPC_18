@@ -1,13 +1,12 @@
-// Interface para la tabla User
 export interface User {
-  idUser: number;
+  id: number;
   username: string;
-  password: string;
   nombre: string;
   apellido: string;
   habilitado: boolean;
   rol: string;
   tiendaID: number;
+  password: string;
 }
 
 export interface Tienda {
@@ -17,10 +16,9 @@ export interface Tienda {
   ciudad: string;
   direccion: string;
   habilitada: boolean;
-  productos?: ProductoEnTienda[]; // Relación con productos
+  productos?: ProductoEnTienda[];
 }
 
-// Interface para la tabla Producto
 export interface Producto {
   idProducto: number;
   nombre: string;
@@ -92,4 +90,15 @@ export interface updatProductStock {
   stock: number;
   talle: string;
   color: string;
+}
+
+export interface LoginDTO {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  id: number;
+  message: string;
+  role: string;
 }

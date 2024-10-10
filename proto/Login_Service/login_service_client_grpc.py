@@ -7,7 +7,7 @@ class LoginClient:
         # Crear un stub del servicio LoginService
         self.stub = login_service_pb2_grpc.LoginServiceStub(channel)
 
-    def Login(self, username, password):
+    def login(self, username, password):
         # Crear la solicitud de login
         login_request = login_service_pb2.LoginRequest(
             username=username,

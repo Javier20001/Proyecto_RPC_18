@@ -26,9 +26,7 @@ const FormStore: React.FC<FormStoreProps> = ({ handleClose, tienda }) => {
   const [errors, setErrors] = useState<ValidationErrors>({});
   const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    // Si necesitas despachar alguna acción para obtener datos adicionales, como ubicaciones, etc.
-  }, [dispatch]);
+  useEffect(() => {}, [dispatch]);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;

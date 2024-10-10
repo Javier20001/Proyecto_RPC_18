@@ -1,14 +1,20 @@
 import sys
 import grpc
+import sys
+import os
 from flask_cors import CORS
 from flask import Flask, jsonify, request
+# Agregar el directorio de Tienda_Service al sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Tienda_Service')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'User_Service')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Producto_Service')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Producto_Manager_Service')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Login_Service')))
 from Tienda_Service.tienda_service_client_grpc import TiendaClient
-from User_Service.user_service_client_grpc import UserClient 
-from Producto_Service.producto_service_client_grpc import ProductoClient 
+from User_Service.user_service_client_grpc import UserClient
+from Producto_Service.producto_service_client_grpc import ProductoClient
 from Producto_Manager_Service.producto_manager_cliente_grpc import ProductoManagerClient
 from Login_Service.login_service_client_grpc import LoginClient
-import producto_manager_pb2
-import producto_manager_pb2_grpc
 
 
 app = Flask(__name__)
@@ -74,14 +80,14 @@ def get_tienda_by_codigo(codigo):
         
         # Si se encuentra la tienda, devolver los detalles
         if response:
-            tienda_data = {
+            tienda_data = [{
                 'id': response.id,
                 'codigo': response.codigo,
                 'provincia': response.provincia,
                 'ciudad': response.ciudad,
                 'direccion': response.direccion,
                 'habilitada': response.habilitada
-            }
+            }]
             return jsonify(tienda_data)
         else:
             return jsonify({'error': 'Tienda no encontrada'}), 404
@@ -404,7 +410,15 @@ def find_all_by_custom_filter_manager():
     
     response = productomanagerclient.find_all_by_custom_filter(nombre, codigo, talle, color, tienda_id)
     productos = [{
-        'id_productoEnTienda': producto.id,
+        'id': producto.id,
+        'producto': {
+            'nombre': producto.producto.nombre,  # Aquí mapeas los atributos del objeto Producto
+            'codigo': producto.producto.codigo,
+            'foto': producto.producto.foto  # Agrega más atributos según tu mensaje Producto
+        },
+        'tienda':{
+            'id': producto.tienda.id
+        },
         'stock': producto.stock,
         'talle': producto.talle,
         'color': producto.color
@@ -471,7 +485,7 @@ def modify_producto_manager():
         'stock': response.stock,
         'talle': response.talle,
         'color': response.color
-    }), 200
+    }),200
 
 @app.route('/producto/stock_manager', methods=['PUT'])
 def modify_stock_manager():
@@ -486,7 +500,13 @@ def modify_stock_manager():
     response = productomanagerclient.modify_stock(producto_id, tienda_id, stock, talle, color)
     return jsonify({
         'id_productoEnTienda': response.id,
-        'stock': response.stock
+        'producto': {
+            'nombre': response.producto.nombre,  # Aquí mapeas los atributos del objeto Producto
+            'codigo': response.producto.codigo   # Agrega más atributos según tu mensaje Producto
+        },
+        'stock': response.stock,
+        'talle': response.talle,
+        'color': response.color
     }), 200
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -497,14 +517,12 @@ def add_user():
         data = request.json
         username = data.get('username')
         password = data.get('password')
-        tienda_id = int(data.get('tienda'))  # Obtener el valor de tienda
+        tienda_id = int(data.get('tienda_id'))  # Obtener el valor de tienda
         nombre = data.get('nombre')
         apellido = data.get('apellido')
-        rol = data.get('rol')
-        habilitado = data.get('habilitado')
 
         # Llamar al método add_user del cliente gRPC
-        user = user_client.add_user(username, password, tienda_id, nombre, apellido, habilitado, rol)
+        user = user_client.add_user(username, password, tienda_id, nombre, apellido)
 
         if user:
             return jsonify({
@@ -513,7 +531,8 @@ def add_user():
                 'nombre': user.nombre,
                 'apellido': user.apellido,
                 'rol': user.rol,
-                'habilitado': user.habilitado
+                'habilitado': user.habilitado,
+                'tiendaID': user.tienda.id
             }), 201
         else:
             return jsonify({'error': 'Unable to add user'}), 500
@@ -532,11 +551,9 @@ def modify_user(user_id):
         tienda_id = data.get('tienda_id')  # Asegúrate de que este campo esté presente
         nombre = data.get('nombre')
         apellido = data.get('apellido')
-        rol = data.get('rol')
-        habilitado = data.get('habilitado')
 
         # Llamar al método modify_user del cliente gRPC para modificar el usuario
-        user = user_client.modify_user(user_id, username, password, tienda_id, nombre, apellido, habilitado, rol)
+        user = user_client.modify_user(user_id, username, password, tienda_id, nombre, apellido)
 
         if user:
             # Formatear la respuesta con los datos del usuario modificado
@@ -546,7 +563,8 @@ def modify_user(user_id):
                 'nombre': user.nombre,
                 'apellido': user.apellido,
                 'rol': user.rol,
-                'habilitado': user.habilitado
+                'habilitado': user.habilitado,
+                'tiendaID': user.tienda.id
             }), 200
         else:
             return jsonify({'error': 'Unable to modify user'}), 500
@@ -574,7 +592,7 @@ def find_all_users():
                 'apellido': user.apellido,
                 'rol': user.rol,
                 'habilitado': user.habilitado,
-                'tienda': user.tienda.id
+                'tiendaID': user.tienda.id
                 
             } for user in users.user]  # `users.users` es la lista dentro del mensaje `Users`
 
@@ -600,7 +618,7 @@ def find_user_by_id(user_id):
                 'apellido': user.apellido,
                 'rol': user.rol,
                 'habilitado': user.habilitado,
-                'tienda': user.tienda.id
+                'tiendaID': user.tienda.id
             }
 
             return jsonify(user_data), 200
@@ -630,7 +648,7 @@ def find_user_by_username(username):
                 'apellido': user.apellido,
                 'rol': user.rol,
                 'habilitado': user.habilitado,
-                'tienda': user.tienda.id
+                'tiendaID': user.tienda.id
             }
 
             return jsonify(user_data), 200
@@ -659,7 +677,7 @@ def find_all_by_tienda(tienda_id):
                 'apellido': user.apellido,
                 'rol': user.rol,
                 'habilitado': user.habilitado,
-                'tienda': user.tienda.id
+                'tiendaID': user.tienda.id
             } for user in users.user]  # `users.users` es la lista dentro del mensaje `Users`
 
             return jsonify(users_list), 200
@@ -694,29 +712,30 @@ def disable_user(user_id):
 
 #------------------------------------------------------------------------------------------------------------------------------
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['POST'])
 def login():
     try:
         # Obtener los datos del cuerpo de la solicitud
-        data = request.json
+        data = request.get_json()
         username = data.get('username')
         password = data.get('password')
+
+        print(username+", "+ password )
 
         # Verificar que ambos campos estén presentes
         if not username or not password:
             return jsonify({'error': 'Username and password are required'}), 400
 
         # Llamar al método login del cliente gRPC
-        response = LoginClient.login(username, password)
-
-        if response:
+        response = login_client.login(username, password)
+        if response.message == "Contraseña incorrecta":
+            return jsonify({'error': 'Invalid username or password'}), 401
+        else:
             return jsonify({
                 'message': response.message,
                 'role': response.role,
                 'id': response.id
             }), 200
-        else:
-            return jsonify({'error': 'Invalid username or password'}), 401
     except Exception as e:
         print(f"Error en login_user: {str(e)}")  # Añadir un print para depuración
         return jsonify({'error': str(e)}), 500

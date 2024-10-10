@@ -30,7 +30,7 @@ class UserClient:
         except grpc.RpcError as e:
             print(f"Error en FindById: {e.details()}")
 
-    def add_user(self, username, password, tienda_id, nombre, apellido, habilitado, rol):
+    def add_user(self, username, password, tienda_id, nombre, apellido):
         try:
         
         # Crear una tienda asociada (parte del user_service_pb2)
@@ -43,7 +43,7 @@ class UserClient:
                 nombre=nombre,
                 apellido=apellido,
                 habilitado=True,
-                rol=rol
+                rol="user"
         )
         
             # Llamar al método AddUser del servidor
@@ -66,7 +66,7 @@ class UserClient:
             print(f"Error en DisableUser: {e.details()}")
 
     # Nuevo método para modificar un usuario
-    def modify_user(self, user_id, username, password, tienda_id, nombre, apellido, habilitado, rol):
+    def modify_user(self, user_id, username, password, tienda_id, nombre, apellido):
         try:
         # Crear una tienda asociada (parte del user_service_pb2)
             tienda = tienda_service_pb2.Tienda(id=tienda_id)
@@ -78,8 +78,8 @@ class UserClient:
                 tienda=tienda,
                 nombre=nombre,
                 apellido=apellido,
-                habilitado=habilitado,
-                rol=rol
+                habilitado=True,
+                rol="user"
             )
        
             # Llamar al método ModifyUser del servidor
