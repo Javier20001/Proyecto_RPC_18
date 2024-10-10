@@ -24,12 +24,10 @@ const ModalProductosParaAgregar: React.FC<modalProps> = ({ tienda_id }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // Filtrar productos que no tienen un tienda.codigo asignado
   const productosSinTienda = productosEnTienda.filter(
     (product) => !product.tienda?.codigo
   );
 
-  // Manejar la asignación de productos
   const handleAssign = (product: ProductoEnTienda) => {
     const data: AsignarProductoEnTiendaDTO = {
       producto_id: product.id,

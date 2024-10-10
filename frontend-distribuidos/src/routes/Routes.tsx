@@ -4,15 +4,13 @@ import LoginPage from "../ui/pages/Login";
 import Store from "../ui/pages/Store";
 import User from "../ui/pages/User";
 import Product from "../ui/pages/Products";
-import ProtectedRoute from "./ProtectedRoute"; // Importa el ProtectedRoute
+import ProtectedRoute from "./ProtectedRoute";
 
 const Router = () => {
   return (
     <Routes>
-      {/* La ruta de login está libre */}
       <Route path="/" element={<LoginPage />} />
 
-      {/* Rutas protegidas */}
       <Route
         path="/home"
         element={

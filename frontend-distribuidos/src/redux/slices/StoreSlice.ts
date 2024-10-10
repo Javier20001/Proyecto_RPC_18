@@ -15,15 +15,12 @@ const initialState: StoresState = {
   error: null,
 };
 
-// Traer todas las tiendas
+// Métodos existentes
 export const fetchStores = createAsyncThunk("stores/fetchStores", async () => {
-  const response = await axios.get<Tienda[]>(
-    "http://127.0.0.1:8081/tiendas/habilitadas"
-  );
+  const response = await axios.get<Tienda[]>("http://127.0.0.1:8081/tiendas");
   return response.data;
 });
 
-// Agregar tienda
 export const addStore = createAsyncThunk(
   "store/addStore",
   async (storeDTO: TiendaDTO, { rejectWithValue }) => {
@@ -43,7 +40,6 @@ export const addStore = createAsyncThunk(
   }
 );
 
-// Actualizar tienda
 export const updateStore = createAsyncThunk(
   "store/updateStore",
   async (
@@ -66,7 +62,6 @@ export const updateStore = createAsyncThunk(
   }
 );
 
-// Eliminar tienda
 export const deleteStore = createAsyncThunk(
   "store/deleteStore",
   async (storeId: number) => {
@@ -75,15 +70,14 @@ export const deleteStore = createAsyncThunk(
   }
 );
 
-//traer por id
 export const findByID = createAsyncThunk(
-  "store/findByID", // Cambiamos el identificador del action
+  "store/findByID",
   async ({ storeId }: { storeId: number }, { rejectWithValue }) => {
     try {
       const response = await axios.get<Tienda>(
         `http://127.0.0.1:8081/tiendas/${storeId}`
       );
-      return response.data; // Asegúrate de que devuelva un solo objeto Tienda
+      return response.data;
     } catch (error: unknown) {
       const errorMessage = handleAxiosError(
         error,
@@ -94,13 +88,41 @@ export const findByID = createAsyncThunk(
   }
 );
 
+export const findByCodigo = createAsyncThunk(
+  "store/findByCodigo",
+  async ({ codigo }: { codigo: string }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get<Tienda[]>(
+        `http://127.0.0.1:8081/tiendas/codigo/${codigo}`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      const errorMessage = handleAxiosError(
+        error,
+        `Error al traer la tienda con código ${codigo}`
+      );
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const fetchHabilitadas = createAsyncThunk(
+  "store/fetchHabilitadas",
+  async () => {
+    const response = await axios.get<Tienda[]>(
+      "http://127.0.0.1:8081/tiendas/habilitadas"
+    );
+    return response.data;
+  }
+);
+
 const storeSlice = createSlice({
   name: "stores",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Casos para traer todas las tiendas
+
       .addCase(fetchStores.pending, (state) => {
         state.status = "loading";
       })
@@ -116,7 +138,6 @@ const storeSlice = createSlice({
         state.error = action.error.message || "Algo salió mal";
       })
 
-      // Casos para agregar tienda
       .addCase(addStore.pending, (state) => {
         state.status = "loading";
       })
@@ -129,7 +150,6 @@ const storeSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Casos para actualizar tienda
       .addCase(updateStore.pending, (state) => {
         state.status = "loading";
       })
@@ -150,7 +170,6 @@ const storeSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Casos para eliminar tienda
       .addCase(deleteStore.pending, (state) => {
         state.status = "loading";
       })
@@ -167,7 +186,7 @@ const storeSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message || "Algo salió mal";
       })
-      // Casos para encontrar tienda por ID
+
       .addCase(findByID.pending, (state) => {
         state.status = "loading";
       })
@@ -177,16 +196,44 @@ const storeSlice = createSlice({
           (store) => store.id === action.payload.id
         );
         if (index !== -1) {
-          // Actualizamos la tienda en caso de que ya exista en el estado
           state.stores[index] = action.payload;
         } else {
-          // Si no está, la añadimos al arreglo de tiendas
           state.stores.push(action.payload);
         }
       })
       .addCase(findByID.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload as string;
+      })
+
+      .addCase(findByCodigo.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        findByCodigo.fulfilled,
+        (state, action: PayloadAction<Tienda[]>) => {
+          state.status = "succeeded";
+          state.stores = action.payload;
+        }
+      )
+      .addCase(findByCodigo.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
+      })
+
+      .addCase(fetchHabilitadas.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        fetchHabilitadas.fulfilled,
+        (state, action: PayloadAction<Tienda[]>) => {
+          state.status = "succeeded";
+          state.stores = action.payload;
+        }
+      )
+      .addCase(fetchHabilitadas.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "Algo salió mal";
       });
   },
 });

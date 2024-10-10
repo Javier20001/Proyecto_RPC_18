@@ -1,6 +1,6 @@
 import grpc
-import tienda_service_pb2
-import tienda_service_pb2_grpc
+from . import tienda_service_pb2
+from . import tienda_service_pb2_grpc
 
 class TiendaClient:
     def __init__(self, channel):

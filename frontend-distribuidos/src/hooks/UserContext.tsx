@@ -5,26 +5,28 @@ import {
   addUser,
   updateUser,
   deleteUser,
+  findUserByUsername,
+  findUsersByTienda,
 } from "../redux/slices/UserSlice"; // Importa las acciones del slice
 import { AppDispatch, RootState } from "../redux/store/store"; // Ajusta según tu configuración de store
 import { User, UserDTO } from "../redux/types";
 
-// Define la interfaz del contexto
 interface UserContextProps {
   users: User[];
+  fetch_all_user: () => void;
   create_User: (userDTO: UserDTO) => void;
   modify_User: (id: number, userDTO: UserDTO) => void;
   remove_User: (id: number) => void;
+  find_User_By_Username: (username: string) => void;
+  find_Users_By_Tienda: (tienda_id: number) => void;
 }
 
-// Crea el contexto
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 interface userProviderProps {
   children: ReactNode;
 }
 
-// Proveedor del contexto
 export const UserProvider: React.FC<userProviderProps> = ({ children }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { users } = useSelector((state: RootState) => state.user);
@@ -32,6 +34,10 @@ export const UserProvider: React.FC<userProviderProps> = ({ children }) => {
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
+
+  const fetch_all_user = () => {
+    dispatch(fetchUsers());
+  };
 
   const create_User = (userDTO: UserDTO) => {
     dispatch(addUser(userDTO));
@@ -45,13 +51,24 @@ export const UserProvider: React.FC<userProviderProps> = ({ children }) => {
     dispatch(deleteUser(id));
   };
 
+  const find_User_By_Username = (username: string) => {
+    dispatch(findUserByUsername(username));
+  };
+
+  const find_Users_By_Tienda = (tienda_id: number) => {
+    dispatch(findUsersByTienda(tienda_id));
+  };
+
   return (
     <UserContext.Provider
       value={{
         users,
+        fetch_all_user,
         create_User,
         modify_User,
         remove_User,
+        find_User_By_Username,
+        find_Users_By_Tienda,
       }}
     >
       {children}
@@ -59,7 +76,6 @@ export const UserProvider: React.FC<userProviderProps> = ({ children }) => {
   );
 };
 
-// Hook personalizado para usar el contexto de usuario
 export const useUserContext = () => {
   const context = useContext(UserContext);
   if (!context) {

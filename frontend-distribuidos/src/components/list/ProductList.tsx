@@ -17,30 +17,26 @@ const ProductLis: React.FC = () => {
     useProductoEnTiendaContext();
 
   const { users } = useUserContext();
-  const { rol, id } = useAuthContext(); // Acceder al contexto de autenticación para obtener el rol del usuario
+  const { rol, id } = useAuthContext();
   const [filteredProducts, setFilteredProducts] = useState<ProductoEnTienda[]>(
     []
   );
 
   useEffect(() => {
     if (rol === "user") {
-      // Filtrar los usuarios para encontrar el usuario actual basado en su ID
       const currentUser = users.find((user) => user.id === id);
       if (currentUser && currentUser.tiendaID) {
-        // Si el usuario tiene una tienda asociada, usamos su tiendaID para filtrar productos
         const productosFiltrados = filter_Productos_By_Tienda(
           currentUser.tiendaID
         );
         setFilteredProducts(productosFiltrados);
       } else {
-        // Si no hay tiendaID asociado o no se encuentra el usuario, maneja el caso como prefieras
         setFilteredProducts([]);
         console.warn(
           "Usuario no tiene una tienda asociada o no fue encontrado."
         );
       }
     } else if (rol === "admin") {
-      // Si es admin, mostrar todos los productos
       setFilteredProducts(productosEnTienda);
     }
   }, [rol, id, productosEnTienda, filter_Productos_By_Tienda]);
@@ -61,7 +57,7 @@ const ProductLis: React.FC = () => {
               <TableCell>nombre</TableCell>
               <TableCell>talle</TableCell>
               <TableCell>color</TableCell>
-              {rol === "user" && <TableCell>stock</TableCell>}
+              <TableCell>stock</TableCell>
               <TableCell>tiendaID</TableCell>
               <TableCell>acciones</TableCell>
             </TableRow>
@@ -77,9 +73,7 @@ const ProductLis: React.FC = () => {
                 <TableCell scope="row">{product.producto.nombre}</TableCell>
                 <TableCell>{product.talle}</TableCell>
                 <TableCell scope="row">{product.color}</TableCell>
-                {rol === "user" && (
-                  <TableCell scope="row">{product.stock}</TableCell>
-                )}
+                <TableCell scope="row">{product.stock}</TableCell>
                 <TableCell scope="row">{product.tienda?.id}</TableCell>
                 <TableCell>
                   <BasicModal
