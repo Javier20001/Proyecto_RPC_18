@@ -19,7 +19,6 @@ import {
   ProductoEnTienda,
 } from "../redux/types";
 
-// Define el tipo del contexto
 type ProductoEnTiendaContextType = {
   productosEnTienda: ProductoEnTienda[];
   fetch_All_Productos: () => void;
@@ -33,12 +32,10 @@ type ProductoEnTiendaContextType = {
   filter_Productos_By_Tienda: (tiendaId: number) => ProductoEnTienda[];
 };
 
-// Crear el contexto
 const ProductoEnTiendaContext = createContext<
   ProductoEnTiendaContextType | undefined
 >(undefined);
 
-// Definir el proveedor del contexto
 interface ProductoEnTiendaProviderProps {
   children: ReactNode;
 }
@@ -55,7 +52,6 @@ export const ProductoEnTiendaProvider: React.FC<
     dispatch(fetchProductosEnTienda());
   }, [dispatch]);
 
-  // Funciones para manejar las acciones
   const fetch_All_Productos = () => {
     dispatch(fetchProductosEnTienda());
   };
@@ -119,7 +115,6 @@ export const ProductoEnTiendaProvider: React.FC<
   );
 };
 
-// Hook para usar el contexto
 export const useProductoEnTiendaContext = () => {
   const context = useContext(ProductoEnTiendaContext);
   if (context === undefined) {

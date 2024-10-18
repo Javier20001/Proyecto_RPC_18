@@ -1,12 +1,20 @@
 import sys
 import grpc
+import sys
+import os
 from flask_cors import CORS
 from flask import Flask, jsonify, request
-from tienda_service_client_grpc import TiendaClient
-from user_service_client_grpc import UserClient 
-from producto_service_client_grpc import ProductoClient 
-from producto_manager_cliente_grpc import ProductoManagerClient
-from login_service_client_grpc import LoginClient
+# Agregar el directorio de Tienda_Service al sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Tienda_Service')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'User_Service')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Producto_Service')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Producto_Manager_Service')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Login_Service')))
+from Tienda_Service.tienda_service_client_grpc import TiendaClient
+from User_Service.user_service_client_grpc import UserClient
+from Producto_Service.producto_service_client_grpc import ProductoClient
+from Producto_Manager_Service.producto_manager_cliente_grpc import ProductoManagerClient
+from Login_Service.login_service_client_grpc import LoginClient
 
 
 app = Flask(__name__)
@@ -72,14 +80,14 @@ def get_tienda_by_codigo(codigo):
         
         # Si se encuentra la tienda, devolver los detalles
         if response:
-            tienda_data = {
+            tienda_data = [{
                 'id': response.id,
                 'codigo': response.codigo,
                 'provincia': response.provincia,
                 'ciudad': response.ciudad,
                 'direccion': response.direccion,
                 'habilitada': response.habilitada
-            }
+            }]
             return jsonify(tienda_data)
         else:
             return jsonify({'error': 'Tienda no encontrada'}), 404
@@ -402,7 +410,15 @@ def find_all_by_custom_filter_manager():
     
     response = productomanagerclient.find_all_by_custom_filter(nombre, codigo, talle, color, tienda_id)
     productos = [{
-        'id_productoEnTienda': producto.id,
+        'id': producto.id,
+        'producto': {
+            'nombre': producto.producto.nombre,  # Aquí mapeas los atributos del objeto Producto
+            'codigo': producto.producto.codigo,
+            'foto': producto.producto.foto  # Agrega más atributos según tu mensaje Producto
+        },
+        'tienda':{
+            'id': producto.tienda.id
+        },
         'stock': producto.stock,
         'talle': producto.talle,
         'color': producto.color
@@ -602,7 +618,7 @@ def find_user_by_id(user_id):
                 'apellido': user.apellido,
                 'rol': user.rol,
                 'habilitado': user.habilitado,
-                'tienda': user.tienda.id
+                'tiendaID': user.tienda.id
             }
 
             return jsonify(user_data), 200
@@ -632,7 +648,7 @@ def find_user_by_username(username):
                 'apellido': user.apellido,
                 'rol': user.rol,
                 'habilitado': user.habilitado,
-                'tienda': user.tienda.id
+                'tiendaID': user.tienda.id
             }
 
             return jsonify(user_data), 200
@@ -661,7 +677,7 @@ def find_all_by_tienda(tienda_id):
                 'apellido': user.apellido,
                 'rol': user.rol,
                 'habilitado': user.habilitado,
-                'tienda': user.tienda.id
+                'tiendaID': user.tienda.id
             } for user in users.user]  # `users.users` es la lista dentro del mensaje `Users`
 
             return jsonify(users_list), 200

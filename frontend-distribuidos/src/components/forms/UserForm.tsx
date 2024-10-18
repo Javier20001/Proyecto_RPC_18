@@ -1,13 +1,13 @@
 import React, { useState, ChangeEvent } from "react";
 import { TextField, Button } from "@mui/material";
-import StoreSelectionModal from "../modal/ModalAsignarTienda"; // El modal que acabamos de crear
-import { useUserContext } from "../../hooks/UserContext"; // Asegúrate de tener el contexto configurado
-import { User, UserDTO } from "../../redux/types"; // Asegúrate de tener definidos los tipos
+import StoreSelectionModal from "../modal/ModalAsignarTienda";
+import { useUserContext } from "../../hooks/UserContext";
+import { User, UserDTO } from "../../redux/types";
 import {
   userValidationWithoutPassword,
   userValidationWithPassword,
   ValidationErrors,
-} from "../../funcionalities/validations"; // Valida los campos
+} from "../../funcionalities/validations";
 
 interface FormUserProps {
   user?: User;
@@ -69,7 +69,7 @@ const UserForm: React.FC<FormUserProps> = ({ user, handleClose }) => {
 
   const handleStoreSelect = (storeId: number) => {
     setFormData({ ...formData, tienda_id: storeId });
-    setIsStoreModalOpen(false); // Cerrar el modal después de seleccionar una tienda
+    setIsStoreModalOpen(false);
   };
 
   return (

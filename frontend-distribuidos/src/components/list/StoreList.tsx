@@ -11,7 +11,9 @@ import BasicModal from "../modal/Modal";
 import ModalProductosDeTienda from "../modal/ModalProductosDeTienda";
 
 const StoreList: React.FC = () => {
-  const { stores } = useStoreContext();
+  const { stores, filteredStores } = useStoreContext();
+
+  const displayedStores = filteredStores.length > 0 ? filteredStores : stores;
 
   return (
     <div>
@@ -25,12 +27,13 @@ const StoreList: React.FC = () => {
               <TableCell>provincia</TableCell>
               <TableCell>ciudad</TableCell>
               <TableCell>Direccion</TableCell>
-              <TableCell></TableCell>
+              <TableCell>habilitada</TableCell>
+              <TableCell>productos</TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {stores.map((store) => (
+            {displayedStores.map((store) => (
               <TableRow
                 key={store.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -40,6 +43,7 @@ const StoreList: React.FC = () => {
                 <TableCell>{store.provincia}</TableCell>
                 <TableCell scope="row">{store.ciudad}</TableCell>
                 <TableCell scope="row">{store.direccion}</TableCell>
+                <TableCell scope="row">{String(store.habilitada)}</TableCell>
                 <TableCell>
                   <ModalProductosDeTienda tienda={store} />
                 </TableCell>

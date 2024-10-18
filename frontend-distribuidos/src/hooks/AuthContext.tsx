@@ -23,7 +23,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const navigate = useNavigate(); // Usar navigate para redirección
+  const navigate = useNavigate();
   const [rol, setRol] = useState<string>("");
   const [id, setid] = useState<number>(0);
 
@@ -44,7 +44,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const logout = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
-    navigate("/"); // Redirigir al login o inicio
+    navigate("/");
   };
 
   return (
@@ -54,7 +54,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-// Hook para usar el contexto
 export const useAuthContext = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

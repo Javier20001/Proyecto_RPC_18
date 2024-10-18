@@ -5,7 +5,7 @@ import Router from "./routes/Routes";
 import NavBar from "./ui/navbar/Navbar";
 import { ProductoEnTiendaProvider } from "../src/hooks/ProductContext";
 import { StoreProvider } from "../src/hooks/StoreContext";
-import { AuthProvider } from "./hooks/AuthContext"; // Asegúrate de importar AuthProvider
+import { AuthProvider } from "./hooks/AuthContext";
 
 import { UserProvider } from "./hooks/UserContext";
 const App: React.FC = () => {

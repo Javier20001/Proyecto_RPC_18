@@ -1,8 +1,15 @@
 import grpc
+# En Tienda_Service/tienda_service_client_grpc.py
+import sys
+import os
+
+# Asegúrate de agregar el directorio raíz a sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../Tienda_Service')))
+
+import tienda_service_pb2
 import producto_manager_pb2
 import producto_manager_pb2_grpc
-import producto_service_pb2
-import tienda_service_pb2
+import producto_service_pb2 # Importación directa
 
 
 class ProductoManagerClient:
@@ -62,7 +69,7 @@ class ProductoManagerClient:
                 codigo=codigo,
                 talle=talle,
                 color=color,
-                tienda=producto_manager_pb2.Tienda(id=tienda_id)
+                tienda=tienda_service_pb2.Tienda(id=tienda_id)
             )
             response = self.stub.FindAllByCustomFilter(request)
             for producto in response.productoEnTienda:

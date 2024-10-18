@@ -1,4 +1,3 @@
-// Interface para la tabla User
 export interface User {
   id: number;
   username: string;
@@ -17,10 +16,9 @@ export interface Tienda {
   ciudad: string;
   direccion: string;
   habilitada: boolean;
-  productos?: ProductoEnTienda[]; // Relación con productos
+  productos?: ProductoEnTienda[];
 }
 
-// Interface para la tabla Producto
 export interface Producto {
   idProducto: number;
   nombre: string;
