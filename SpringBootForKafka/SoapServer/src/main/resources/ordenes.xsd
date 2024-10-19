@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.example.com/ordenes"
+           xmlns="http://www.example.com/ordenes"
+           elementFormDefault="qualified">
+
+    <!-- Definición de ProductoEnOCDTO -->
+    <xs:complexType name="ProductoEnOCDTO">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="codigo" type="xs:string"/>
+            <xs:element name="color" type="xs:string"/>
+            <xs:element name="talle" type="xs:string"/>
+            <xs:element name="cantidadSolicitada" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Definición de OrdenDeCompraDTO -->
+    <xs:complexType name="OrdenDeCompraDTO">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="estado" type="xs:string"/>
+            <xs:element name="observaciones" type="xs:string" minOccurs="0"/>
+            <xs:element name="productosEnOC" type="ProductoEnOCDTO" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="tiendaId" type="xs:int"/>
+            <xs:element name="ordenDeDespachoId" type="xs:int" minOccurs="0"/>
+            <xs:element name="fechaDeSolicitud" type="xs:date"/>
+            <xs:element name="fechaDeRecepcion" type="xs:date" minOccurs="0"/>
+            <xs:element name="pausada" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Solicitud para obtener una orden por ID -->
+    <xs:element name="getOrdenDeCompraByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para obtener una orden por ID -->
+    <xs:element name="getOrdenDeCompraByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ordenDeCompra" type="OrdenDeCompraDTO"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Solicitud para obtener todas las órdenes de compra -->
+    <xs:element name="getAllOrdenesDeCompraRequest">
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para obtener todas las órdenes de compra -->
+    <xs:element name="getAllOrdenesDeCompraResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ordenesDeCompra" type="OrdenDeCompraDTO" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
