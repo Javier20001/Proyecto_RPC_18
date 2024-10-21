@@ -3,7 +3,6 @@ package com.soap.SoapServer.config;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.config.annotation.EnableWs;
@@ -16,27 +15,26 @@ import org.springframework.xml.xsd.XsdSchema;
 @EnableWs
 @Configuration
 public class WebServiceConfig extends WsConfigurerAdapter {
-
     @Bean
-    public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext context) {
+    public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext applicationContext) {
         MessageDispatcherServlet servlet = new MessageDispatcherServlet();
-        servlet.setApplicationContext(context);
+        servlet.setApplicationContext(applicationContext);
         servlet.setTransformWsdlLocations(true);
         return new ServletRegistrationBean<>(servlet, "/ws/*");
     }
 
-    @Bean(name = "ordenes")
-    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema ordenesSchema) {
+    @Bean(name = "countries")
+    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema countriesSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
-        wsdl11Definition.setPortTypeName("OrdenesPort");
+        wsdl11Definition.setPortTypeName("CountriesPort");
         wsdl11Definition.setLocationUri("/ws");
-        wsdl11Definition.setTargetNamespace("http://www.example.com/ordenes");
-        wsdl11Definition.setSchema(ordenesSchema);
+        wsdl11Definition.setTargetNamespace("http://spring.io/guides/gs-producing-web-service");
+        wsdl11Definition.setSchema(countriesSchema);
         return wsdl11Definition;
     }
 
     @Bean
-    public XsdSchema ordenDeCompraSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("ordenes.xsd"));
+    public XsdSchema countriesSchema() {
+        return new SimpleXsdSchema(new ClassPathResource("countries.xsd"));
     }
 }

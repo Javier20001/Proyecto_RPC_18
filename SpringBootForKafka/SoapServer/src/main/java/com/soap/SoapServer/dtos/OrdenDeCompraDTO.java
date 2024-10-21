@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.time.LocalDate;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)

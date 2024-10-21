@@ -32,6 +32,7 @@
 		<module>SpringBootConsumer</module>
 		<module>grpc_server</module>
 		<module>SoapServer</module>
+		<module>SoapClient</module>
 	</modules>
 
 	<properties>
