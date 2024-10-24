@@ -24,7 +24,6 @@ public class OrdenDeCompraEndpoint {
         List<OrdenDeCompraDTO> ordenes = ordenDeCompraSoapService.findAll();
         GetAllOrdenesDeCompraResponse response = new GetAllOrdenesDeCompraResponse();
         response.getOrdenesDeCompra().addAll(ordenes);
-        //response.setOrdenesDeCompra(ordenes);
         return response;
     }
 
@@ -34,8 +33,37 @@ public class OrdenDeCompraEndpoint {
         List<GetOrdenesDeCompraFiltradasResponse.OrdenesAgrupadas> ordenes = ordenDeCompraSoapService.filtrarOrdenes(request);
         GetOrdenesDeCompraFiltradasResponse response = new GetOrdenesDeCompraFiltradasResponse();
         response.getOrdenesAgrupadas().addAll(ordenes);
-        //response.setOrdenesDeCompra(ordenes);
         return response;
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addFiltroRequest")
+    @ResponsePayload
+    public AddFiltroResponse addFiltro(@RequestPayload AddFiltroRequest request){
+        return ordenDeCompraSoapService.addFiltro(request);
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getFiltrosByUsuarioRequest")
+    @ResponsePayload
+    public GetFiltrosByUsuarioResponse getFiltrosByUsuario(@RequestPayload GetFiltrosByUsuarioRequest request){
+        return ordenDeCompraSoapService.getFiltrosByUsuarioId(request);
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAllOrdenesByFiltroIdRequest")
+    @ResponsePayload
+    public GetAllOrdenesByFiltroIdResponse getAllOrdenesByFiltroId(@RequestPayload GetAllOrdenesByFiltroIdRequest request) {
+        return ordenDeCompraSoapService.getAllOrdenesByFiltroId(request);
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "updateFiltroByIdRequest")
+    @ResponsePayload
+    public UpdateFiltroByIdResponse updateFiltro(@RequestPayload UpdateFiltroByIdRequest request) {
+        return ordenDeCompraSoapService.updateFiltroById(request);
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deleteFiltroByIdRequest")
+    @ResponsePayload
+    public DeleteFiltroByIdResponse deleteFiltro(@RequestPayload DeleteFiltroByIdRequest request) {
+        return ordenDeCompraSoapService.deleteFiltroById(request);
     }
 
 }
