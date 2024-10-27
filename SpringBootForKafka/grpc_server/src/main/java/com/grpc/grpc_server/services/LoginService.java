@@ -2,17 +2,17 @@ package com.grpc.grpc_server.services;
 
 import com.grpc.grpc_server.entities.User;
 import com.grpc.grpc_server.repositories.IUserRepository;
+import com.grpc.grpc_server.services.LoginServiceProto.LoginRequest;
+import com.grpc.grpc_server.services.LoginServiceProto.LoginResponse;
 import io.grpc.stub.StreamObserver;
 import org.lognet.springboot.grpc.GRpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.grpc.grpc_server.services.LoginServiceProto.LoginResponse;
-import com.grpc.grpc_server.services.LoginServiceProto.LoginRequest;
 
 import java.util.Optional;
 
 @GRpcService
-public class LoginService extends LoginServiceGrpc.LoginServiceImplBase {
+public class LoginService extends com.grpc.grpc_server.services.LoginServiceGrpc.LoginServiceImplBase {
 
     @Autowired
     private IUserRepository userRepository;

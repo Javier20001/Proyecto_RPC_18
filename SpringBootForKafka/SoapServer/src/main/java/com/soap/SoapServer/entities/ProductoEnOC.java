@@ -32,6 +32,7 @@ public class ProductoEnOC {
     @Column(name = "cantidad_solicitada", nullable = false)
     private int cantidadSolicitada;
 
+
     @Override
     public String toString() {
         return "ProductoEnOC{" +

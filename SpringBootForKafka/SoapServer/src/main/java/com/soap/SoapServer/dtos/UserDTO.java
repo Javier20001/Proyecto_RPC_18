@@ -8,20 +8,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ProductoEnOCDTO", propOrder = {
-        "id", "codigo", "color", "talle", "cantidadSolicitada" ,
-
+@XmlType(name = "User", propOrder = {
+        "id", "username", "password",
+        "nombre", "apellido","habilitado",
+        "rol"
 })
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductoEnOCDTO {
+public class UserDTO {
 
     private int id;
-    private String codigo;
-    private String color;
-    private String talle;
-    private int cantidadSolicitada;
+    private String username;
+    private String password;;
+    private String nombre;
+    private String apellido;
+    private String habilitado;
+    private String rol;
 
 
 }

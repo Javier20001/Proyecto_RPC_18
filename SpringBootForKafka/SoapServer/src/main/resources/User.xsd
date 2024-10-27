@@ -1,0 +1,104 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.com/users"
+           targetNamespace="http://www.example.com/users" elementFormDefault="qualified">
+
+    <!-- Solicitud para obtener todos los usuarios -->
+    <xs:element name="getAllUsersRequest">
+        <xs:complexType/>
+    </xs:element>
+
+    <!-- Respuesta para obtener todos los usuarios -->
+    <xs:element name="getAllUsersResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="users" type="tns:UserDTO" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Solicitud para obtener un usuario por ID -->
+    <xs:element name="getUserByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para obtener un usuario por ID -->
+    <xs:element name="getUserByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="user" type="tns:UserDTO"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Solicitud para agregar un usuario -->
+    <xs:element name="addUserRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="user" type="tns:UserDTO"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para agregar un usuario -->
+    <xs:element name="addUserResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="status" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Solicitud para actualizar un usuario -->
+    <xs:element name="updateUserRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="user" type="tns:UserDTO"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para actualizar un usuario -->
+    <xs:element name="updateUserResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="status" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Solicitud para eliminar un usuario -->
+    <xs:element name="deleteUserRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para eliminar un usuario -->
+    <xs:element name="deleteUserResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="status" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Definición del tipo de usuario (UserDTO) -->
+    <xs:complexType name="UserDTO">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="username" type="xs:string"/>
+            <xs:element name="password" type="xs:string"/>
+            <xs:element name="nombre" type="xs:string"/>
+            <xs:element name="apellido" type="xs:string"/>
+            <xs:element name="habilitado" type="xs:string"/>
+            <xs:element name="rol" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>
+

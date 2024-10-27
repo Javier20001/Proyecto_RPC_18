@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="SoapServer" />
+        <module name="SoapClient" />
+        <module name="grpc_server" />
+        <module name="SpringBootConsumer" />
+        <module name="SpringBooProvider" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="SoapClient" options="-parameters" />
+      <module name="SoapServer" options="-parameters" />
+      <module name="SpringBooProvider" options="-parameters" />
+      <module name="SpringBootConsumer" options="-parameters" />
+      <module name="grpc_server" options="-parameters" />
+    </option>
+  </component>
+</project>
