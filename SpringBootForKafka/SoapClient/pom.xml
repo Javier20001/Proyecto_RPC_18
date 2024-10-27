@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -13,19 +12,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SoapClient</name>
 	<description>Spring Boot SOAP Client</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
 	<properties>
 		<java.version>17</java.version>
 		<maven.compiler.source>17</maven.compiler.source>
@@ -36,7 +22,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -51,10 +36,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web-services</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
@@ -74,7 +55,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- tag::wsdl[] -->
 			<plugin>
 				<groupId>com.sun.xml.ws</groupId>
 				<artifactId>jaxws-maven-plugin</artifactId>
@@ -93,13 +73,8 @@
 						<wsdlUrl>http://localhost:8088/ws/ordenes.wsdl</wsdlUrl>
 						<wsdlUrl>http://localhost:8088/ws/catalogo.wsdl</wsdlUrl>
 					</wsdlUrls>
-					<sourceDestDir>${sourcesDir}</sourceDestDir>
-					<destDir>${classesDir}</destDir>
-					<extension>true</extension>
 				</configuration>
 			</plugin>
-			<!-- end::wsdl[] -->
 		</plugins>
 	</build>
-
 </project>

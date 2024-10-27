@@ -1,11 +1,8 @@
 package com.soap.SoapClient.services;
 
-import com.example.catalogo.ExportarCatalogoPDFRequest;
-import com.example.catalogo.ExportarCatalogoPDFResponse;
-import com.example.consumingwebservice.wsdl.CreateCatalogoRequest;
-import com.example.consumingwebservice.wsdl.CreateCatalogoResponse;
-import com.example.consumingwebservice.wsdl.DeleteCatalogoRequest;
-import com.example.consumingwebservice.wsdl.DeleteCatalogoResponse;
+
+
+import com.example.consumingwebservice.wsdl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
