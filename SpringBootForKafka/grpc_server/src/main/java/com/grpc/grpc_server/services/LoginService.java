@@ -33,6 +33,7 @@ public class LoginService extends LoginServiceGrpc.LoginServiceImplBase {
                             .setMessage("Login exitoso")
                             .setRole(user.getRol())
                             .setId(user.getId())
+                            .setIdTienda(user.getTienda().getId())
                             .build();
                     responseObserver.onNext(response);
                     responseObserver.onCompleted();

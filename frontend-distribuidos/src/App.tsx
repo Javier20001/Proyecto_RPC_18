@@ -6,6 +6,8 @@ import NavBar from "./ui/navbar/Navbar";
 import { ProductoEnTiendaProvider } from "../src/hooks/ProductContext";
 import { StoreProvider } from "../src/hooks/StoreContext";
 import { AuthProvider } from "./hooks/AuthContext";
+import { OrdenDeCompraProvider } from "./hooks/PurchaseOrderContext";
+import { NewsProvider } from "./hooks/NewsContext";
 
 import { UserProvider } from "./hooks/UserContext";
 const App: React.FC = () => {
@@ -15,8 +17,12 @@ const App: React.FC = () => {
         <StoreProvider>
           <ProductoEnTiendaProvider>
             <UserProvider>
-              <NavBar />
-              <Router />
+              <OrdenDeCompraProvider>
+                <NewsProvider>
+                  <NavBar />
+                  <Router />
+                </NewsProvider>
+              </OrdenDeCompraProvider>
             </UserProvider>
           </ProductoEnTiendaProvider>
         </StoreProvider>

@@ -18,9 +18,11 @@ const LoginPage: React.FC = () => {
       );
 
       localStorage.setItem("token", response.data.role);
+      localStorage.setItem("idTienda", String(response.data.idTienda));
       const token = response.data.role;
       const id = response.data.id;
-      login(token, id);
+      const idTienda = response.data.idTienda;
+      login(token, id, idTienda);
       navigate("/home");
     } catch (error) {
       console.error("Error during login:", error);

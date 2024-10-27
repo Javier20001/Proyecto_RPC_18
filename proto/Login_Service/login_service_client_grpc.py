@@ -19,6 +19,7 @@ class LoginClient:
             print(f"Login message: {response.message}")
             print(f"User role: {response.role}")
             print(f"User ID: {response.id}")
+            print(f"Tienda ID: {response.idTienda}")
             return response
         except grpc.RpcError as e:
             print(f"Error durante el login: {e.details()}")

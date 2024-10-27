@@ -6,6 +6,7 @@ import FormStore from "../forms/StoreForm";
 import { ProductoEnTienda, Tienda, User } from "../../redux/types";
 import FormProductoEnTienda from "../forms/ProductosForm";
 import UserForm from "../forms/UserForm";
+import PurchaseOrderForm from "../forms/PurchaseOrderForm";
 
 interface modalProps {
   titulo: string;
@@ -49,6 +50,10 @@ const BasicModal: React.FC<modalProps> = ({
               productoEnTienda={producto}
               handleClose={handleClose}
             />
+          )}
+
+          {proveniencia === "ordenDeCompra" && (
+            <PurchaseOrderForm handleClose={handleClose} />
           )}
 
           {proveniencia === "user" && (

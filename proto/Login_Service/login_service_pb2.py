@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13login_service.proto\"2\n\x0cLoginRequest\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\":\n\rLoginResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04role\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\x05\x32\x36\n\x0cLoginService\x12&\n\x05Login\x12\r.LoginRequest\x1a\x0e.LoginResponseB2\n\x1d\x63om.grpc.grpc_server.servicesB\x11LoginServiceProtob\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13login_service.proto\"2\n\x0cLoginRequest\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"L\n\rLoginResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04role\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\x05\x12\x10\n\x08idTienda\x18\x04 \x01(\x05\x32\x36\n\x0cLoginService\x12&\n\x05Login\x12\r.LoginRequest\x1a\x0e.LoginResponseB2\n\x1d\x63om.grpc.grpc_server.servicesB\x11LoginServiceProtob\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,7 +35,7 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_LOGINREQUEST']._serialized_start=23
   _globals['_LOGINREQUEST']._serialized_end=73
   _globals['_LOGINRESPONSE']._serialized_start=75
-  _globals['_LOGINRESPONSE']._serialized_end=133
-  _globals['_LOGINSERVICE']._serialized_start=135
-  _globals['_LOGINSERVICE']._serialized_end=189
+  _globals['_LOGINRESPONSE']._serialized_end=151
+  _globals['_LOGINSERVICE']._serialized_start=153
+  _globals['_LOGINSERVICE']._serialized_end=207
 # @@protoc_insertion_point(module_scope)

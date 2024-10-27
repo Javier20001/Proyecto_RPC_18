@@ -5,6 +5,8 @@ import Store from "../ui/pages/Store";
 import User from "../ui/pages/User";
 import Product from "../ui/pages/Products";
 import ProtectedRoute from "./ProtectedRoute";
+import PurchaseOrder from "../ui/pages/PurchaseOrders";
+import News from "../ui/pages/News";
 
 const Router = () => {
   return (
@@ -40,6 +42,22 @@ const Router = () => {
         element={
           <ProtectedRoute>
             <Product />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/PurchaseOrder"
+        element={
+          <ProtectedRoute>
+            <PurchaseOrder />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/News"
+        element={
+          <ProtectedRoute>
+            <News />
           </ProtectedRoute>
         }
       />

@@ -35,6 +35,35 @@ export interface ProductoEnTienda {
   color: string;
 }
 
+export interface OrdenDeCompraModel {
+  id: number;
+  estado: string;
+  observaciones: string;
+  productosEnOC: ProductoEnOCModel[];
+  tiendaId: number;
+  ordenDeDespachoId: number;
+  fechaDeSolicitud: string;
+  fechaDeRecepcion: string;
+  pausada: boolean;
+}
+
+export interface ProductoEnOCModel {
+  id: number;
+  codigo: string;
+  color: string;
+  talle: string;
+  cantidadSolicitada: number;
+}
+
+export interface ProductoNovedades {
+  id: number;
+  nombre: string;
+  codigo: string;
+  foto: string;
+  talle: string;
+  aceptado: boolean;
+}
+
 // DTOS
 
 export interface ProductoDTO {
@@ -101,4 +130,5 @@ export interface LoginResponse {
   id: number;
   message: string;
   role: string;
+  idTienda: number;
 }
