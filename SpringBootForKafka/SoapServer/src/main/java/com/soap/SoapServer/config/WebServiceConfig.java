@@ -52,4 +52,17 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     public XsdSchema ordenessSchema() {
         return new SimpleXsdSchema(new ClassPathResource("ordenes.xsd"));
     }
+
+    @Bean(name = "User")
+    public DefaultWsdl11Definition UserWsdl11Definition(XsdSchema UserSchema) {
+        DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
+        wsdl11Definition.setPortTypeName("UserPort");
+        wsdl11Definition.setLocationUri("/ws");
+        wsdl11Definition.setTargetNamespace("http://www.example.com/User");
+        wsdl11Definition.setSchema(UserSchema);
+        return wsdl11Definition;
+    }
+
+    @Bean
+    public XsdSchema UserSchema() {return new SimpleXsdSchema(new ClassPathResource("User.xsd"));}
 }
