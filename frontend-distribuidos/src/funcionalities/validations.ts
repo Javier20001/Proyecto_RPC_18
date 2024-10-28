@@ -1,4 +1,3 @@
-// validations.ts
 export interface ValidationErrors {
   provincia?: string;
   ciudad?: string;

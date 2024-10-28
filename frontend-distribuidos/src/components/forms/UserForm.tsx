@@ -60,7 +60,6 @@ const UserForm: React.FC<FormUserProps> = ({ user, handleClose }) => {
       if (user) {
         modify_User(user.id, userdto);
       } else {
-        console.log(userdto);
         create_User(userdto);
       }
       handleClose();

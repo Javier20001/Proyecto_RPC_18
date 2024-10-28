@@ -36,15 +36,9 @@ const NavBar: React.FC = () => {
             <Button color="inherit" component={RouterLink} to="/home">
               Home
             </Button>
-            {rol === "user" && (
-              <Button
-                color="inherit"
-                component={RouterLink}
-                to="/PurchaseOrder"
-              >
-                PurchaseOrder
-              </Button>
-            )}
+            <Button color="inherit" component={RouterLink} to="/PurchaseOrder">
+              PurchaseOrder
+            </Button>
             <Button color="inherit" onClick={logout}>
               Logout
             </Button>

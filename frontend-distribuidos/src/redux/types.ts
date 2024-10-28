@@ -64,6 +64,44 @@ export interface ProductoNovedades {
   aceptado: boolean;
 }
 
+export interface ordenesAgrupadas {
+  ordenesAgrupadas: orden[];
+}
+
+export interface orden {
+  codigoProducto: string;
+  estado: string;
+  tiendaId: number;
+  cantidadTotalPedida: number;
+}
+
+export interface FiltroBase {
+  //este es para buscar
+  codigoProducto?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
+  estado?: string;
+  tiendaId?: number | string;
+  habilitado?: boolean;
+}
+
+export interface Filtro extends FiltroBase {
+  //este es para actualizar un filtro
+  id: number;
+  nombre: string;
+}
+
+export interface FiltroUpdate extends FiltroBase {
+  filtroId: number;
+  nombre: string;
+}
+
+export interface FiltroAdd extends FiltroBase {
+  //y este es para guardar
+  usuarioId: number;
+  nombre: string;
+}
+
 // DTOS
 
 export interface ProductoDTO {

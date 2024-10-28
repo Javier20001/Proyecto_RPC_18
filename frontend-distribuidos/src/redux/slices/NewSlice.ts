@@ -3,7 +3,6 @@ import axios from "axios";
 import { handleAxiosError } from "../../Errors/HandlerAxiosError";
 import { ProductoNovedades } from "../types";
 
-// Estado inicial del slice
 interface NewsState {
   novedades: ProductoNovedades[];
   status: "idle" | "loading" | "succeeded" | "failed";
@@ -16,12 +15,11 @@ const initialState: NewsState = {
   error: null,
 };
 
-// Thunk para obtener las novedades no aceptadas
 export const fetchNoAceptadas = createAsyncThunk(
   "news/fetchNoAceptadas",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get<ProductoEnNovedades[]>(
+      const response = await axios.get<ProductoNovedades[]>(
         "http://127.0.0.1:8085/api/v1/novedades"
       );
       return response.data;
@@ -35,7 +33,6 @@ export const fetchNoAceptadas = createAsyncThunk(
   }
 );
 
-// Thunk para aceptar una novedad
 export const darDeAltaProducto = createAsyncThunk(
   "news/darDeAltaProducto",
   async (id: number, { rejectWithValue }) => {
@@ -54,20 +51,19 @@ export const darDeAltaProducto = createAsyncThunk(
   }
 );
 
-// Definición del slice
 const newsSlice = createSlice({
   name: "news",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Manejo del estado para obtener novedades no aceptadas
+
       .addCase(fetchNoAceptadas.pending, (state) => {
         state.status = "loading";
       })
       .addCase(
         fetchNoAceptadas.fulfilled,
-        (state, action: PayloadAction<ProductoEnNovedades[]>) => {
+        (state, action: PayloadAction<ProductoNovedades[]>) => {
           state.status = "succeeded";
           state.novedades = action.payload;
         }
@@ -76,13 +72,13 @@ const newsSlice = createSlice({
         state.status = "failed";
         state.error = action.payload as string;
       })
-      // Manejo del estado para aceptar un producto en novedades
+
       .addCase(darDeAltaProducto.pending, (state) => {
         state.status = "loading";
       })
       .addCase(darDeAltaProducto.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // Podrías filtrar la novedad aceptada del estado o marcarla como aceptada
+
         const id = action.meta.arg;
         state.novedades = state.novedades.map((novedad) =>
           novedad.id === id ? { ...novedad, aceptado: true } : novedad
@@ -95,5 +91,4 @@ const newsSlice = createSlice({
   },
 });
 
-// Exporta el reducer del slice
 export default newsSlice.reducer;

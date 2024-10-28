@@ -8,6 +8,7 @@ import { StoreProvider } from "../src/hooks/StoreContext";
 import { AuthProvider } from "./hooks/AuthContext";
 import { OrdenDeCompraProvider } from "./hooks/PurchaseOrderContext";
 import { NewsProvider } from "./hooks/NewsContext";
+import { FilterProvider } from "./hooks/FilterContext";
 
 import { UserProvider } from "./hooks/UserContext";
 const App: React.FC = () => {
@@ -19,8 +20,10 @@ const App: React.FC = () => {
             <UserProvider>
               <OrdenDeCompraProvider>
                 <NewsProvider>
-                  <NavBar />
-                  <Router />
+                  <FilterProvider>
+                    <NavBar />
+                    <Router />
+                  </FilterProvider>
                 </NewsProvider>
               </OrdenDeCompraProvider>
             </UserProvider>

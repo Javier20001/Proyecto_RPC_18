@@ -11,7 +11,6 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async (values: LoginDTO) => {
     try {
-      console.log(values);
       const response = await axios.post<LoginResponse>(
         "http://127.0.0.1:8081/login",
         values

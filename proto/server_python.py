@@ -728,7 +728,7 @@ def login():
 
         # Llamar al método login del cliente gRPC
         response = login_client.login(username, password)
-        if response.message == "Contraseña incorrecta":
+        if response.message == "Usuario no encontrado" or response.message == "Contraseña incorrecta":
             return jsonify({'error': 'Invalid username or password'}), 401
         else:
             return jsonify({

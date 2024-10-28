@@ -5,7 +5,7 @@ import React, {
   ReactNode,
   useContext,
 } from "react";
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -38,6 +38,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const login = (token: string, idUser: number, idTienda: number) => {
     localStorage.setItem("token", token);
+    localStorage.setItem("idUser", String(idUser));
     setRol(token);
     setid(idUser);
     setidTienda(idTienda);

@@ -5,18 +5,20 @@ import {
   fetchAcceptedOrdenesDeCompra,
   fetchAllOrdenesDeCompra,
   receiveOrdenDeCompra,
-} from "../redux/slices/PurchaseOrderSlice"; // Ajusta las importaciones según tu estructura
+  filterOrdenesDeCompra,
+  fetchOrdenesDeCompraByFiltroId,
+} from "../redux/slices/PurchaseOrderSlice";
 import { AppDispatch, RootState } from "../redux/store/store";
-import { OrdenDeCompraModel } from "../redux/types";
+import { FiltroBase, OrdenDeCompraModel } from "../redux/types";
 
 interface OrdenDeCompraContextProps {
   ordenesDeCompra: OrdenDeCompraModel[];
   createOrdenDeCompra: (ordenDTO: OrdenDeCompraModel) => void;
   getAcceptedOrdenesDeCompra: (idTienda: number) => void;
   getAllOrdenesDeCompra: () => void;
+  filtrarOrdenesDeCompra: (filterOrder: FiltroBase) => void;
   receiveOrden: (idTienda: number, idOrden: number) => void;
-  status: "idle" | "loading" | "succeeded" | "failed";
-  error: string | null;
+  traerOrdenesPorFiltroID: (idfiltro: number) => void;
 }
 
 const OrdenDeCompraContext = createContext<
@@ -31,7 +33,7 @@ export const OrdenDeCompraProvider: React.FC<OrdenDeCompraProviderProps> = ({
   children,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { ordenesDeCompra, status, error } = useSelector(
+  const { ordenesDeCompra } = useSelector(
     (state: RootState) => state.PurchaseOrder
   );
 
@@ -55,6 +57,14 @@ export const OrdenDeCompraProvider: React.FC<OrdenDeCompraProviderProps> = ({
     dispatch(receiveOrdenDeCompra({ idTienda, idOrden }));
   };
 
+  const filtrarOrdenesDeCompra = (filterParams: FiltroBase) => {
+    dispatch(filterOrdenesDeCompra(filterParams));
+  };
+
+  const traerOrdenesPorFiltroID = (filtroId: number) => {
+    dispatch(fetchOrdenesDeCompraByFiltroId(filtroId));
+  };
+
   return (
     <OrdenDeCompraContext.Provider
       value={{
@@ -62,9 +72,9 @@ export const OrdenDeCompraProvider: React.FC<OrdenDeCompraProviderProps> = ({
         createOrdenDeCompra,
         getAcceptedOrdenesDeCompra,
         getAllOrdenesDeCompra,
+        filtrarOrdenesDeCompra,
         receiveOrden,
-        status,
-        error,
+        traerOrdenesPorFiltroID,
       }}
     >
       {children}

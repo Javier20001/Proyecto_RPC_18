@@ -20,7 +20,7 @@ import { Tienda, TiendaDTO } from "../redux/types";
 
 type StoreContextType = {
   stores: Tienda[];
-  filteredStores: Tienda[]; // Almacenará las tiendas filtradas
+  filteredStores: Tienda[];
   fetch_all: () => void;
   add_Store: (storeDTO: TiendaDTO) => void;
   update_Store: (storeDTO: TiendaDTO, id: number) => void;

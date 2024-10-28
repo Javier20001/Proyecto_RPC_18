@@ -1,7 +1,12 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { handleAxiosError } from "../../Errors/HandlerAxiosError";
-import { OrdenDeCompraModel } from "../types";
+import {
+  FiltroBase,
+  OrdenDeCompraModel,
+  ordenesAgrupadas,
+  ProductoEnOCModel,
+} from "../types";
 
 interface OrdenDeCompraState {
   ordenesDeCompra: OrdenDeCompraModel[];
@@ -15,7 +20,6 @@ const initialState: OrdenDeCompraState = {
   error: null,
 };
 
-// Thunk para agregar una nueva orden de compra
 export const addOrdenDeCompra = createAsyncThunk(
   "ordenesDeCompra/addOrdenDeCompra",
   async (ordenDeCompra: OrdenDeCompraModel, { rejectWithValue }) => {
@@ -35,7 +39,6 @@ export const addOrdenDeCompra = createAsyncThunk(
   }
 );
 
-// Thunk para obtener todas las órdenes aceptadas y con orden de despacho
 export const fetchAcceptedOrdenesDeCompra = createAsyncThunk(
   "ordenesDeCompra/fetchAcceptedOrdenesDeCompra",
   async (idTienda: number, { rejectWithValue }) => {
@@ -54,7 +57,6 @@ export const fetchAcceptedOrdenesDeCompra = createAsyncThunk(
   }
 );
 
-// Thunk para obtener todas las órdenes de compra
 export const fetchAllOrdenesDeCompra = createAsyncThunk(
   "ordenesDeCompra/fetchAllOrdenesDeCompra",
   async (_, { rejectWithValue }) => {
@@ -73,7 +75,25 @@ export const fetchAllOrdenesDeCompra = createAsyncThunk(
   }
 );
 
-// Thunk para recibir una orden de compra
+export const filterOrdenesDeCompra = createAsyncThunk(
+  "ordenesDeCompra/filterOrdenesDeCompra",
+  async (filterParams: FiltroBase, { rejectWithValue }) => {
+    try {
+      const response = await axios.post<ordenesAgrupadas>(
+        "http://127.0.0.1:8087/api/v2/ordenesDeCompra/filtrar",
+        filterParams
+      );
+      return response.data;
+    } catch (error: unknown) {
+      const errorMessage = handleAxiosError(
+        error,
+        "Error al filtrar las órdenes de compra"
+      );
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 export const receiveOrdenDeCompra = createAsyncThunk(
   "ordenesDeCompra/receiveOrdenDeCompra",
   async (
@@ -89,6 +109,24 @@ export const receiveOrdenDeCompra = createAsyncThunk(
       const errorMessage = handleAxiosError(
         error,
         "Error al recibir la orden de compra"
+      );
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const fetchOrdenesDeCompraByFiltroId = createAsyncThunk(
+  "ordenesDeCompra/fetchOrdenesDeCompraByFiltroId",
+  async (filtroId: number, { rejectWithValue }) => {
+    try {
+      const response = await axios.get<ordenesAgrupadas>(
+        `http://127.0.0.1:8087/api/v2/ordenesDeCompra/ordenesByFiltro/${filtroId}`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      const errorMessage = handleAxiosError(
+        error,
+        "Error al obtener las órdenes de compra por ID de filtro"
       );
       return rejectWithValue(errorMessage);
     }
@@ -137,6 +175,7 @@ const ordenDeCompraSlice = createSlice({
         fetchAllOrdenesDeCompra.fulfilled,
         (state, action: PayloadAction<OrdenDeCompraModel[]>) => {
           state.status = "succeeded";
+          state.ordenesDeCompra = [];
           state.ordenesDeCompra = action.payload;
         }
       )
@@ -144,7 +183,6 @@ const ordenDeCompraSlice = createSlice({
         state.status = "failed";
         state.error = action.payload as string;
       })
-      // Manejo del estado para recibir una orden de compra
       .addCase(receiveOrdenDeCompra.pending, (state) => {
         state.status = "loading";
       })
@@ -153,6 +191,99 @@ const ordenDeCompraSlice = createSlice({
         // Podrías manejar una actualización específica del estado si es necesario
       })
       .addCase(receiveOrdenDeCompra.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
+      })
+      .addCase(filterOrdenesDeCompra.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        filterOrdenesDeCompra.fulfilled,
+        (state, action: PayloadAction<ordenesAgrupadas>) => {
+          state.status = "succeeded";
+          state.ordenesDeCompra = [];
+          if (action.payload.ordenesAgrupadas) {
+            let idOrder = 1;
+            state.ordenesDeCompra = action.payload.ordenesAgrupadas.map(
+              (orden) => {
+                const productosEnOC: ProductoEnOCModel[] = [
+                  {
+                    id: idOrder,
+                    codigo: orden.codigoProducto,
+                    color: "",
+                    talle: "",
+                    cantidadSolicitada: orden.cantidadTotalPedida,
+                  },
+                ];
+
+                const nuevaOrdenDeCompra: OrdenDeCompraModel = {
+                  id: idOrder,
+                  estado: orden.estado,
+                  observaciones: "",
+                  productosEnOC: productosEnOC,
+                  tiendaId: orden.tiendaId,
+                  ordenDeDespachoId: 0,
+                  fechaDeSolicitud: new Date().toISOString(),
+                  fechaDeRecepcion: "",
+                  pausada: false,
+                };
+
+                idOrder++;
+                return nuevaOrdenDeCompra;
+              }
+            );
+          } else {
+            state.ordenesDeCompra = [];
+          }
+        }
+      )
+      .addCase(filterOrdenesDeCompra.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
+      })
+      .addCase(fetchOrdenesDeCompraByFiltroId.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        fetchOrdenesDeCompraByFiltroId.fulfilled,
+        (state, action: PayloadAction<ordenesAgrupadas>) => {
+          state.status = "succeeded";
+          if (action.payload.ordenesAgrupadas) {
+            let idOrder = 1;
+            state.ordenesDeCompra = action.payload.ordenesAgrupadas.map(
+              (orden) => {
+                const productosEnOC: ProductoEnOCModel[] = [
+                  {
+                    id: idOrder,
+                    codigo: orden.codigoProducto,
+                    color: "",
+                    talle: "",
+                    cantidadSolicitada: orden.cantidadTotalPedida,
+                  },
+                ];
+
+                const nuevaOrdenDeCompra: OrdenDeCompraModel = {
+                  id: idOrder,
+                  estado: orden.estado,
+                  observaciones: "",
+                  productosEnOC: productosEnOC,
+                  tiendaId: orden.tiendaId,
+                  ordenDeDespachoId: 0,
+                  fechaDeSolicitud: new Date().toISOString(),
+                  fechaDeRecepcion: "",
+                  pausada: false,
+                };
+
+                idOrder++;
+                return nuevaOrdenDeCompra;
+              }
+            );
+          } else {
+            state.ordenesDeCompra = [];
+          }
+        }
+      )
+      .addCase(fetchOrdenesDeCompraByFiltroId.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload as string;
       });

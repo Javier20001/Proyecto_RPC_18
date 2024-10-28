@@ -26,7 +26,6 @@ const PurchaseOrderForm: React.FC<FormOrdenDeCompraProps> = ({
     pausada: false,
   });
 
-  // Nueva lista para gestionar productos con sus cantidades de stock
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData({
@@ -37,14 +36,10 @@ const PurchaseOrderForm: React.FC<FormOrdenDeCompraProps> = ({
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // setFormData({ ...formData, productosEnOC: productosConStock });
-
-    console.log(formData);
     createOrdenDeCompra(formData);
     handleClose();
   };
 
-  // Manejar la selección de productos y la cantidad de stock
   const handleProductsSelect = (selectedProducts: ProductoEnOCModel[]) => {
     setFormData({ ...formData, productosEnOC: selectedProducts });
   };

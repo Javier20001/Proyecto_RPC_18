@@ -37,6 +37,7 @@ public class LoginService extends LoginServiceGrpc.LoginServiceImplBase {
                             .build();
                     responseObserver.onNext(response);
                     responseObserver.onCompleted();
+
                 } else {
                     LoginResponse response = LoginResponse.newBuilder()
                             .setMessage("Usuario no habilitado")
