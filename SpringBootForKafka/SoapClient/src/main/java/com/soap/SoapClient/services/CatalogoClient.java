@@ -3,50 +3,46 @@ package com.soap.SoapClient.services;
 
 
 import com.example.consumingwebservice.wsdl.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
-import org.springframework.ws.soap.client.core.SoapActionCallback;
 
 public class CatalogoClient extends WebServiceGatewaySupport {
 
-    private static final Logger log = LoggerFactory.getLogger(CatalogoClient.class);
-
-
-    public CreateCatalogoResponse createCatalogo(CreateCatalogoRequest request) {
-        log.info("Creating catalogo: {}", request);
-
-        return (CreateCatalogoResponse) getWebServiceTemplate()
-                .marshalSendAndReceive("http://localhost:8088/ws/catalogo", request,
-                        new SoapActionCallback(
-                                "http://www.example.com/catalogo/CreateCatalogoRequest"));
+    public AddCatalogoResponse addCatalogo(CatalogoDto catalogoDto) {
+        AddCatalogoRequest request = new AddCatalogoRequest();
+        request.setCatalogo(catalogoDto);
+        return (AddCatalogoResponse) getWebServiceTemplate()
+                .marshalSendAndReceive("http://localhost:8088/ws", request);
     }
 
-    public DeleteCatalogoResponse deleteCatalogo(Long catalogoId) {
+    // Método para eliminar un catálogo
+    public DeleteCatalogoResponse deleteCatalogo(int catalogoId) {
         DeleteCatalogoRequest request = new DeleteCatalogoRequest();
-        request.setId(Math.toIntExact(catalogoId));
-        log.info("Deleting catalogo with ID: {}", catalogoId);
-
-        return (DeleteCatalogoResponse) getWebServiceTemplate()
-                .marshalSendAndReceive("http://localhost:8088/ws/catalogo", request,
-                        new SoapActionCallback(
-                                "http://www.example.com/catalogo/DeleteCatalogoRequest"));
-    }
-
-    public byte[] exportarCatalogoPDF(Long catalogoId) {
-        ExportarCatalogoPDFRequest request = new ExportarCatalogoPDFRequest();
         request.setCatalogoId(catalogoId);
-
-        // Llamada al servicio SOAP
-        ExportarCatalogoPDFResponse response = (ExportarCatalogoPDFResponse) getWebServiceTemplate()
-                .marshalSendAndReceive("http://localhost:8088/ws/catalogo", request,
-                        new SoapActionCallback("http://www.example.com/catalogo/ExportarCatalogoPDFRequest"));
-
-        // Retorna el PDF en formato de arreglo de bytes
-        return response.getPdfBytes();
+        return (DeleteCatalogoResponse) getWebServiceTemplate()
+                .marshalSendAndReceive("http://localhost:8088/ws", request);
     }
 
-
-
+    // Método para actualizar un catálogo
+    public UpdateCatalogoResponse updateCatalogo(int catalogoId, CatalogoDto catalogoDto) {
+        UpdateCatalogoRequest request = new UpdateCatalogoRequest();
+        request.setCatalogoId(catalogoId);
+        request.setCatalogo(catalogoDto);
+        return (UpdateCatalogoResponse) getWebServiceTemplate()
+                .marshalSendAndReceive("http://localhost:8088/ws", request);
+    }
+    public AddProductoToCatalogoResponse addProductoToCatalogo(int catalogoId, ProductoDto productoDto) {
+        AddProductoToCatalogoRequest request = new AddProductoToCatalogoRequest();
+        request.setCatalogoId(catalogoId);
+        request.setProducto(productoDto);
+        return (AddProductoToCatalogoResponse) getWebServiceTemplate()
+                .marshalSendAndReceive("http://localhost:8088/ws", request);
+    }
+    // Método para eliminar un producto de un catálogo
+    public DeleteProductoFromCatalogoResponse deleteProductoFromCatalogo(int catalogoId, int productoId) {
+        DeleteProductoFromCatalogoRequest request = new DeleteProductoFromCatalogoRequest();
+        request.setCatalogoId(catalogoId);
+        request.setProductoId(productoId);
+        return (DeleteProductoFromCatalogoResponse) getWebServiceTemplate()
+                .marshalSendAndReceive("http://localhost:8088/ws", request);
+    }
 }
-

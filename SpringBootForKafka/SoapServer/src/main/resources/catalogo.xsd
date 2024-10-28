@@ -1,46 +1,53 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="http://www.example.com/catalogo"
            xmlns="http://www.example.com/catalogo"
            elementFormDefault="qualified">
 
-    <xs:element name="createCatalogoRequest">
+    <!-- Tipo para ProductoDto -->
+    <xs:complexType name="ProductoDto">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int" minOccurs="0"/>
+            <xs:element name="nombre" type="xs:string"/>
+            <xs:element name="color" type="xs:string"/>
+            <xs:element name="talla" type="xs:string"/>
+            <xs:element name="fotoUrl" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Tipo para CatalogoDto -->
+    <xs:complexType name="CatalogoDto">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int" minOccurs="0"/>
+            <xs:element name="nombre" type="xs:string"/>
+            <xs:element name="productos" type="ProductoDto" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Elementos de Solicitud y Respuesta para cada operación -->
+
+    <!-- addCatalogoRequest y Response -->
+    <xs:element name="addCatalogoRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="catalogoDTO" type="CatalogoDTO"/>
+                <xs:element name="catalogo" type="CatalogoDto"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="createCatalogoResponse">
+    <xs:element name="addCatalogoResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="catalogoDTO" type="CatalogoDTO"/>
+                <xs:element name="catalogo" type="CatalogoDto"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="getCatalogoByIdRequest">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="id" type="xs:int"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:element name="getCatalogoByIdResponse">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="catalogoDTO" type="CatalogoDTO"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
+    <!-- updateCatalogoRequest y Response -->
     <xs:element name="updateCatalogoRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="id" type="xs:int"/>
-                <xs:element name="catalogoDTO" type="CatalogoDTO"/>
+                <xs:element name="catalogoId" type="xs:int"/>
+                <xs:element name="catalogo" type="CatalogoDto"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -48,85 +55,59 @@
     <xs:element name="updateCatalogoResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="catalogoDTO" type="CatalogoDTO"/>
+                <xs:element name="catalogo" type="CatalogoDto"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
+    <!-- deleteCatalogoRequest y Response -->
     <xs:element name="deleteCatalogoRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="id" type="xs:int"/>
+                <xs:element name="catalogoId" type="xs:int"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="deleteCatalogoResponse"/>
+    <xs:element name="deleteCatalogoResponse">
+        <xs:complexType/>
+    </xs:element>
 
+    <!-- addProductoToCatalogoRequest y Response -->
     <xs:element name="addProductoToCatalogoRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="catalogoId" type="xs:int"/>
-                <xs:element name="productoDTO" type="ProductoDTO"/>
+                <xs:element name="producto" type="ProductoDto"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="addProductoToCatalogoResponse"/>
+    <xs:element name="addProductoToCatalogoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="catalogo" type="CatalogoDto"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-    <xs:element name="getProductosByCatalogoIdRequest">
+    <!-- deleteProductoFromCatalogoRequest y Response -->
+    <xs:element name="deleteProductoFromCatalogoRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="catalogoId" type="xs:int"/>
+                <xs:element name="productoId" type="xs:int"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="getProductosByCatalogoIdResponse">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="productosDTO" type="ProductoDTO" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:complexType>
+    <xs:element name="deleteProductoFromCatalogoResponse">
+        <xs:complexType/>
     </xs:element>
-
-    <xs:element name="exportCatalogoToPdfRequest">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="catalogoId" type="xs:int"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:element name="exportCatalogoToPdfResponse">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="pdfContent" type="xs:base64Binary"/>
-                <xs:element name="catalogoNombre" type="xs:string"/>
-                <xs:element name="error" type="xs:string" minOccurs="0"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:complexType name="CatalogoDTO">
-        <xs:sequence>
-            <xs:element name="id" type="xs:int" minOccurs="0"/>
-            <xs:element name="nombre" type="xs:string"/>
-            <xs:element name="descripcion" type="xs:string"/>
-            <xs:element name="tiendaId" type="xs:int" minOccurs="0"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="ProductoDTO">
-        <xs:sequence>
-            <xs:element name="codigo" type="xs:string"/>
-            <xs:element name="color" type="xs:string"/>
-            <xs:element name="talle" type="xs:string"/>
-            <xs:element name="cantidadSolicitada" type="xs:int"/>
-        </xs:sequence>
-    </xs:complexType>
 
 </xs:schema>
+
+
 
 
 

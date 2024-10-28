@@ -53,6 +53,9 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         return new SimpleXsdSchema(new ClassPathResource("ordenes.xsd"));
     }
 
+
+
+
     @Bean(name = "catalogo")
     public DefaultWsdl11Definition catalogoWsdl11Definition(XsdSchema catalogoSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();

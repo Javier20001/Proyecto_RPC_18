@@ -1,49 +1,53 @@
 package com.soap.SoapClient.controllers;
 
-
-import com.example.consumingwebservice.wsdl.CreateCatalogoRequest;
-import com.example.consumingwebservice.wsdl.CreateCatalogoResponse;
-import com.example.consumingwebservice.wsdl.DeleteCatalogoResponse;
+import com.example.consumingwebservice.wsdl.*;
 import com.soap.SoapClient.services.CatalogoClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v2/catalogo")
+@RequestMapping("/catalogos")
 public class CatalogoController {
+    private final CatalogoClient catalogoClient;
 
     @Autowired
-    private CatalogoClient catalogoClient;
-
-    @PostMapping("/create")
-    public CreateCatalogoResponse createCatalogo(@RequestBody CreateCatalogoRequest request) {
-        // Método para crear un nuevo catálogo
-        return catalogoClient.createCatalogo(request);
+    public CatalogoController(CatalogoClient catalogoClient) {
+        this.catalogoClient = catalogoClient;
     }
 
-    @DeleteMapping("/{catalogoId}")
-    public DeleteCatalogoResponse deleteCatalogo(@PathVariable Long catalogoId) {
-        // Método para eliminar un catálogo por ID
-        return catalogoClient.deleteCatalogo(catalogoId);
+    @PostMapping("/add")
+    public AddCatalogoResponse addCatalogo(@RequestBody CatalogoDto catalogoDto) {
+        // Validación del ID
+        if (catalogoDto.getId() == null) {
+            throw new IllegalArgumentException("El ID del catálogo no puede ser nulo");
+        }
+
+        return catalogoClient.addCatalogo(catalogoDto);
     }
 
-    @GetMapping("/exportarPDF/{catalogoId}")
-    public ResponseEntity<byte[]> exportarCatalogoPDF(@PathVariable Long catalogoId) {
-        byte[] pdfBytes = catalogoClient.exportarCatalogoPDF(catalogoId);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", "catalogo.pdf");
-
-        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+    @PutMapping("/update/{id}")
+    public UpdateCatalogoResponse updateCatalogo(@PathVariable int id, @RequestBody CatalogoDto catalogoDto) {
+        return catalogoClient.updateCatalogo(id, catalogoDto);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public DeleteCatalogoResponse deleteCatalogo(@PathVariable int id) {
+        return catalogoClient.deleteCatalogo(id);
+    }
 
+    @PostMapping("/{catalogoId}/producto/add")
+    public AddProductoToCatalogoResponse addProductoToCatalogo(@PathVariable int catalogoId, @RequestBody ProductoDto productoDto) {
+        return catalogoClient.addProductoToCatalogo(catalogoId, productoDto);
+    }
+
+    @DeleteMapping("/{catalogoId}/producto/delete/{productoId}")
+    public DeleteProductoFromCatalogoResponse deleteProductoFromCatalogo(@PathVariable int catalogoId, @PathVariable int productoId) {
+        return catalogoClient.deleteProductoFromCatalogo(catalogoId, productoId);
+    }
 
 
 }
+
 
