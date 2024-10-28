@@ -23,7 +23,7 @@ const initialState: ProductsState = {
     },
     {
       idProducto: 2,
-      nombre: "remera roja", // "remera roja"
+      nombre: "remera roja",
       codigo: "noi42h1o",
       talle: "s",
       color: "rojo",
@@ -35,7 +35,6 @@ const initialState: ProductsState = {
   error: null,
 };
 
-// Traer todos los productos
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
@@ -46,7 +45,6 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-// Agregar producto
 export const addProduct = createAsyncThunk(
   "product/addProduct",
   async (productDTO: ProductoDTO, { rejectWithValue }) => {
@@ -66,7 +64,6 @@ export const addProduct = createAsyncThunk(
   }
 );
 
-// Actualizar producto
 export const updateProduct = createAsyncThunk(
   "product/updateProduct",
   async (
@@ -89,7 +86,6 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
-// Eliminar producto
 export const deleteProduct = createAsyncThunk(
   "product/deleteProduct",
   async (productId: number) => {
@@ -104,7 +100,7 @@ const productsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      //   Casos para traer todos los productos
+
       .addCase(fetchProducts.pending, (state) => {
         state.status = "loading";
       })
@@ -120,7 +116,6 @@ const productsSlice = createSlice({
         state.error = action.error.message || "Something went wrong";
       })
 
-      // Casos para agregar productos
       .addCase(addProduct.pending, (state) => {
         state.status = "loading";
       })
@@ -131,7 +126,7 @@ const productsSlice = createSlice({
           if (!Array.isArray(state.products)) {
             state.products = [];
           }
-          // Agregar el nuevo producto a la lista de productos
+
           state.products.push(action.payload);
         }
       )
@@ -139,7 +134,7 @@ const productsSlice = createSlice({
         state.status = "failed";
         state.error = action.payload as string;
       })
-      // Casos para actualizar productos
+
       .addCase(updateProduct.pending, (state) => {
         state.status = "loading";
       })
@@ -147,11 +142,11 @@ const productsSlice = createSlice({
         updateProduct.fulfilled,
         (state, action: PayloadAction<Producto>) => {
           state.status = "succeeded";
-          // Buscar el índice del producto a actualizar
+
           const index = state.products.findIndex(
             (product) => product.idProducto === action.payload.idProducto
           );
-          // Si lo encuentra, actualiza el producto en el array
+
           if (index !== -1) {
             state.products[index] = action.payload;
           }
@@ -161,7 +156,7 @@ const productsSlice = createSlice({
         state.status = "failed";
         state.error = action.payload as string;
       })
-      // Casos para eliminar productos
+
       .addCase(deleteProduct.pending, (state) => {
         state.status = "loading";
       })
@@ -169,7 +164,7 @@ const productsSlice = createSlice({
         deleteProduct.fulfilled,
         (state, action: PayloadAction<number>) => {
           state.status = "succeeded";
-          // Elimina el producto filtrando por ID
+
           state.products = state.products.filter(
             (product) => product.idProducto !== action.payload
           );

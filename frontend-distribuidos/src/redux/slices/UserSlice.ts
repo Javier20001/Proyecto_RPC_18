@@ -179,7 +179,7 @@ const userSlice = createSlice({
         findUserByUsername.fulfilled,
         (state, action: PayloadAction<User>) => {
           state.status = "succeeded";
-          state.users = [action.payload]; // Puede ser un solo usuario
+          state.users = [action.payload];
         }
       )
       .addCase(findUserByUsername.rejected, (state, action) => {

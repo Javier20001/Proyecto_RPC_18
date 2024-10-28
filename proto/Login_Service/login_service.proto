@@ -17,4 +17,5 @@ message LoginResponse {
   string message = 1;  // Mensaje si el login fue exitoso o fallido
   string role = 2;     // Rol del usuario en caso de login exitoso
   int32 id = 3;
+  int32 idTienda = 4; //id de la tienda
 }

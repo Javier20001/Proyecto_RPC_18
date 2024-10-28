@@ -11,7 +11,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { useStoreContext } from "../../hooks/StoreContext"; // Asegúrate de tener este contexto configurado
+import { useStoreContext } from "../../hooks/StoreContext";
 
 interface StoreSelectionModalProps {
   open: boolean;

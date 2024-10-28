@@ -7,8 +7,8 @@ import {
   deleteUser,
   findUserByUsername,
   findUsersByTienda,
-} from "../redux/slices/UserSlice"; // Importa las acciones del slice
-import { AppDispatch, RootState } from "../redux/store/store"; // Ajusta según tu configuración de store
+} from "../redux/slices/UserSlice";
+import { AppDispatch, RootState } from "../redux/store/store";
 import { User, UserDTO } from "../redux/types";
 
 interface UserContextProps {

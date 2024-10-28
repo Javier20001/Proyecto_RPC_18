@@ -15,7 +15,6 @@ const initialState: StoresState = {
   error: null,
 };
 
-// Métodos existentes
 export const fetchStores = createAsyncThunk("stores/fetchStores", async () => {
   const response = await axios.get<Tienda[]>("http://127.0.0.1:8081/tiendas");
   return response.data;

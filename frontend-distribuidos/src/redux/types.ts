@@ -35,6 +35,73 @@ export interface ProductoEnTienda {
   color: string;
 }
 
+export interface OrdenDeCompraModel {
+  id: number;
+  estado: string;
+  observaciones: string;
+  productosEnOC: ProductoEnOCModel[];
+  tiendaId: number;
+  ordenDeDespachoId: number;
+  fechaDeSolicitud: string;
+  fechaDeRecepcion: string;
+  pausada: boolean;
+}
+
+export interface ProductoEnOCModel {
+  id: number;
+  codigo: string;
+  color: string;
+  talle: string;
+  cantidadSolicitada: number;
+}
+
+export interface ProductoNovedades {
+  id: number;
+  nombre: string;
+  codigo: string;
+  foto: string;
+  talle: string;
+  aceptado: boolean;
+}
+
+export interface ordenesAgrupadas {
+  ordenesAgrupadas: orden[];
+}
+
+export interface orden {
+  codigoProducto: string;
+  estado: string;
+  tiendaId: number;
+  cantidadTotalPedida: number;
+}
+
+export interface FiltroBase {
+  //este es para buscar
+  codigoProducto?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
+  estado?: string;
+  tiendaId?: number | string;
+  habilitado?: boolean;
+}
+
+export interface Filtro extends FiltroBase {
+  //este es para actualizar un filtro
+  id: number;
+  nombre: string;
+}
+
+export interface FiltroUpdate extends FiltroBase {
+  filtroId: number;
+  nombre: string;
+}
+
+export interface FiltroAdd extends FiltroBase {
+  //y este es para guardar
+  usuarioId: number;
+  nombre: string;
+}
+
 // DTOS
 
 export interface ProductoDTO {
@@ -101,4 +168,5 @@ export interface LoginResponse {
   id: number;
   message: string;
   role: string;
+  idTienda: number;
 }

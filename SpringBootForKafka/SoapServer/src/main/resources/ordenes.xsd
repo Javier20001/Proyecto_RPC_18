@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.example.com/ordenes"
+           xmlns="http://www.example.com/ordenes"
+           elementFormDefault="qualified">
+
+    <!-- Definición de ProductoEnOCDTO -->
+    <xs:complexType name="ProductoEnOCDTO">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="codigo" type="xs:string"/>
+            <xs:element name="color" type="xs:string"/>
+            <xs:element name="talle" type="xs:string"/>
+            <xs:element name="cantidadSolicitada" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Definición de OrdenDeCompraDTO -->
+    <xs:complexType name="OrdenDeCompraDTO">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="estado" type="xs:string"/>
+            <xs:element name="observaciones" type="xs:string" minOccurs="0"/>
+            <xs:element name="productosEnOC" type="ProductoEnOCDTO" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="tiendaId" type="xs:int"/>
+            <xs:element name="ordenDeDespachoId" type="xs:int" minOccurs="0"/>
+            <xs:element name="fechaDeSolicitud" type="xs:date"/>
+            <xs:element name="fechaDeRecepcion" type="xs:date" minOccurs="0"/>
+            <xs:element name="pausada" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Solicitud para obtener todas las órdenes de compra -->
+    <xs:element name="getAllOrdenesDeCompraRequest">
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para obtener todas las órdenes de compra -->
+    <xs:element name="getAllOrdenesDeCompraResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ordenesDeCompra" type="OrdenDeCompraDTO" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getOrdenesDeCompraFiltradasRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="codigoProducto" type="xs:string" minOccurs="0"/>
+                <xs:element name="fechaInicio" type="xs:date" minOccurs="0"/>
+                <xs:element name="fechaFin" type="xs:date" minOccurs="0"/>
+                <xs:element name="estado" type="xs:string" minOccurs="0"/>
+                <xs:element name="tiendaId" type="xs:int" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para obtener órdenes de compra agrupadas -->
+    <xs:element name="getOrdenesDeCompraFiltradasResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ordenesAgrupadas" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="codigoProducto" type="xs:string"/>
+                            <xs:element name="estado" type="xs:string"/>
+                            <xs:element name="tiendaId" type="xs:int"/>
+                            <xs:element name="cantidadTotalPedida" type="xs:int"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Solicitud para agregar un filtro -->
+    <xs:element name="addFiltroRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="usuarioId" type="xs:int"/>
+                <xs:element name="nombre" type="xs:string" minOccurs="0"/>
+                <xs:element name="codigoProducto" type="xs:string" minOccurs="0"/>
+                <xs:element name="fechaInicio" type="xs:date" minOccurs="0"/>
+                <xs:element name="fechaFin" type="xs:date" minOccurs="0"/>
+                <xs:element name="estado" type="xs:string" minOccurs="0"/>
+                <xs:element name="tiendaId" type="xs:int" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para agregar un filtro -->
+    <xs:element name="addFiltroResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="success" type="xs:boolean"/>
+                <xs:element name="message" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Solicitud para obtener los filtros de un usuario -->
+    <xs:element name="getFiltrosByUsuarioRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="usuarioId" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para obtener los filtros de un usuario -->
+    <xs:element name="getFiltrosByUsuarioResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="filtros" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="id" type="xs:int"/>
+                            <xs:element name="nombre" type="xs:string" minOccurs="0"/>
+                            <xs:element name="codigoProducto" type="xs:string" minOccurs="0"/>
+                            <xs:element name="fechaInicio" type="xs:date" minOccurs="0"/>
+                            <xs:element name="fechaFin" type="xs:date" minOccurs="0"/>
+                            <xs:element name="estado" type="xs:string" minOccurs="0"/>
+                            <xs:element name="tiendaId" type="xs:int" minOccurs="0"/>
+                            <xs:element name="habilitado" type="xs:boolean"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Solicitud para obtener todas las ordenes segun el ID del filtro -->
+    <xs:element name="getAllOrdenesByFiltroIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="filtroId" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para obtener todas las ordenes segun el ID del filtro -->
+    <xs:element name="getAllOrdenesByFiltroIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ordenesAgrupadas" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="codigoProducto" type="xs:string"/>
+                            <xs:element name="estado" type="xs:string"/>
+                            <xs:element name="tiendaId" type="xs:int"/>
+                            <xs:element name="cantidadTotalPedida" type="xs:int"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Solicitud para actualizar el filtro segun el ID del filtro -->
+    <xs:element name="updateFiltroByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="filtroId" type="xs:int"/>
+                <xs:element name="nombre" type="xs:string" minOccurs="0"/>
+                <xs:element name="codigoProducto" type="xs:string" minOccurs="0"/>
+                <xs:element name="fechaInicio" type="xs:date" minOccurs="0"/>
+                <xs:element name="fechaFin" type="xs:date" minOccurs="0"/>
+                <xs:element name="estado" type="xs:string" minOccurs="0"/>
+                <xs:element name="tiendaId" type="xs:int" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta al actualizar el filtro -->
+    <xs:element name="updateFiltroByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="success" type="xs:boolean"/>
+                <xs:element name="message" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Solicitud para eliminar un filtro segun el ID del filtro -->
+    <xs:element name="deleteFiltroByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="filtroId" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta al eliminar un filtro -->
+    <xs:element name="deleteFiltroByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="success" type="xs:boolean"/>
+                <xs:element name="message" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

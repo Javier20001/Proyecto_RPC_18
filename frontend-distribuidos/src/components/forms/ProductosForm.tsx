@@ -29,7 +29,7 @@ const FormProductoEnTienda: React.FC<FormProductoEnTiendaProps> = ({
     color: productoEnTienda?.color || "",
   });
 
-  const [stock, setStock] = useState<number>(productoEnTienda?.stock ?? 0); // Estado para el stock
+  const [stock, setStock] = useState<number>(productoEnTienda?.stock ?? 0);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
