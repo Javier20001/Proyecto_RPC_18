@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "tienda")
 @Data
@@ -28,6 +31,11 @@ public class Tienda {
 
     @Column(name = "habilitada", nullable = false)
     private Boolean habilitada;
+
+    @OneToMany(mappedBy = "tienda", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Catalogo> catalogos = new ArrayList<>();
+
+
 
     public Tienda(String codigo, String provincia, String ciudad, String direccion, Boolean habilitada) {
         this.codigo = codigo;

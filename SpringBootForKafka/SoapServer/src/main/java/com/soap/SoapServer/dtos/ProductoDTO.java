@@ -7,24 +7,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "CatalogoDTO", propOrder = {
-        "id", "nombre", "descripcion", "productos"
+@XmlType(name = "ProductoDTO", propOrder = {
+        "id","nombre","codigo", "color", "talle"
 })
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class CatalogoDTO {
+public class ProductoDTO {
 
     private int id;
     private String nombre;
-    private String descripcion;
-    private List<ProductoEnOCDTO> productos;
-
-
+    private String codigo;
+    private String color;
+    private String talle;
 
 }
-
-

@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public interface ICatalogoRepository extends JpaRepository<Catalogo, Integer> {
     // Método para buscar catálogos por nombre (sensible a mayúsculas y minúsculas)
+
     List<Catalogo> findByNombre(String nombre);
 
     // Método para buscar catálogos que contengan una subcadena en el nombre

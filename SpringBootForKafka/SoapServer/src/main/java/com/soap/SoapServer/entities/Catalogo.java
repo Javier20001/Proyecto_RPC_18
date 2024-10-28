@@ -1,10 +1,13 @@
 package com.soap.SoapServer.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -22,9 +25,12 @@ public class Catalogo {
     @Column(name = "descripcion", length = 255)
     private String descripcion;
 
-    @OneToMany
-    @JsonIgnore
+    @OneToMany(mappedBy = "catalogo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Producto> productos = new ArrayList<>();
 
+    @ManyToOne // o @OneToMany dependiendo de la relación
+    @JoinColumn(name = "tienda_id") // Ajusta el nombre de la columna según tu esquema
+    private Tienda tienda;
 
     @Override
     public String toString() {
